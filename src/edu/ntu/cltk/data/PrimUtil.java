@@ -1,6 +1,9 @@
 package edu.ntu.cltk.data;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +11,21 @@ import edu.ntu.cltk.crypto.CryptoUtil;
 
 public class PrimUtil {
 
+	/**
+	 * Determine if the current s is a boolean value
+	 * @param s
+	 * @return
+	 */
+	public static boolean isBoolean(String s){
+		List<String> bools = new ArrayList<String>(Arrays.asList("" +
+				"true",
+				"false",
+				"True",
+				"False",
+				"TRUE",
+				"FALSE"));
+		return bools.contains(s);
+	}
 	/**
 	 * Determine if the current s is an integer or not
 	 * 
@@ -100,12 +118,12 @@ public class PrimUtil {
 	}
 
 	/**
-	 * Determine if the current str is a predicable string or not
+	 * Determine if the current str is a predictable string or not
 	 * 
 	 * @param t
 	 * @return
 	 */
-	public static boolean isPredicable(String t) {
+	public static boolean isPredictable(String t) {
 
 		// Decoding the t if it is encoded with URLEncoder
 		try {
@@ -118,8 +136,10 @@ public class PrimUtil {
 			t = CryptoUtil.base64Decoding(t);
 		}
 
-		// Rules of predicable value
-
+		// Rules of predictable value
+		if (isBoolean(t))	return true;
+		
+		
 		// Length of string is too short. [a-zA-Z0-9_] 63^3 = 250047
 		if (t.length() < 4)
 			return true;
