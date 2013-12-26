@@ -126,19 +126,19 @@ public class PrimUtil {
 	public static boolean isPredictable(String t) {
 
 		// Decoding the t if it is encoded with URLEncoder
-		try {
+		/*try {
 			t = CryptoUtil.urlDecoding(t);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		if (isBase64(t)) {
 			t = CryptoUtil.base64Decoding(t);
 		}
 
 		// Rules of predictable value
 		if (isBoolean(t))	return true;
-		
+		if (LocaleUtil.isLocale(t))	return true;
 		
 		// Length of string is too short. [a-zA-Z0-9_] 63^3 = 250047
 		if (t.length() < 4)
@@ -189,4 +189,5 @@ public class PrimUtil {
 	public static boolean isASCII(char c) {
 		return (c & (1 << 7)) == 0;
 	}
+	
 }
