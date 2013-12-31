@@ -1,6 +1,9 @@
 package edu.ntu.cltk.file;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class FileUtil {
 
@@ -25,6 +28,56 @@ public class FileUtil {
 			return file.mkdirs();
 		}
 		return true;
+	}
+	
+	/**
+	 * Append one message to a file
+	 * @param filePath
+	 * @param content
+	 * @return
+	 */
+	public static boolean appendFile(String filePath, String content){
+		return writeFile(filePath, content, "a");
+	}
+	/**
+	 * Write one message to a file, if file exists, overwrite it
+	 * @param filePath
+	 * @param content
+	 * @return
+	 */
+	public static boolean writeFile(String filePath, String content){
+		return writeFile(filePath, content, "w");
+	}
+	/**
+	 * Write one message to a file
+	 * @param filePath
+	 * @param content
+	 * @param option		"a" or "w"
+	 * @return
+	 */
+	public static boolean writeFile(String filePath, String content, String option){
+		BufferedWriter bufWriter = null;
+		try {
+			bufWriter = new BufferedWriter(new FileWriter(filePath));
+			if (option.contains("a")){
+				bufWriter.append(content);
+			}else{
+				bufWriter.write(content);
+			}
+			return true;
+		} catch (IOException e) {
+			return false;
+		}finally{
+			if (bufWriter != null){
+				try {
+					bufWriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 	
 	/**
