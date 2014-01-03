@@ -99,4 +99,111 @@ public class FileUtil {
 			return new String[]{fullPath, null};
 		}
 	}
+	
+	public static final int FILE_COMBINE_SUFFIX = 0x0001;
+	public static final int FILE_COMBINE_PREFIX = 0x0002;
+	/**
+	 * Combine the file name with a prefix or suffix
+	 * @param fileName
+	 * @param addition
+	 * @param option
+	 * @return
+	 */
+	public static String combineName(String fileName, String addition, int option){
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		if (option == FILE_COMBINE_SUFFIX){
+			fileNode.fileName = fileNode.fileName + addition;
+		}else if (option == FILE_COMBINE_PREFIX){
+			fileNode.fileName = addition + fileNode.fileName;
+		}
+		return fileNode.toString();
+	}
+	
+	/**
+	 * The class to present the info for a specific file
+	 * For example, /home/pillar/test/class.txt will create an instance of FileNode which has
+	 * 		Directory : /home/pillar/test
+	 * 		FileName:	class
+	 * 		Extension:	txt
+	 * Where the extension only means the suffix of the file, not the real file type sometimes.
+	 * If one file does not have directory or extension, like file test, then will create an instance
+	 * 		Directory: 
+	 * 		FileName:	test
+	 * 		Extension:	
+	 * @author pillar
+	 *
+	 */
+	public static class FileNode{
+		
+		// The directory of the file
+		String directory = null;
+		// The name of the file
+		String fileName = null;
+		// The extension for the file
+		String fileExtension = null;
+		
+		int osType = UNIX_TYPE;
+		
+		public static final int WINDOW_TYPE = 0x0001;
+		public static final int UNIX_TYPE = 0x0002;
+		
+		public FileNode(String absoluteName){
+			parse(absoluteName);
+		}
+		
+		public FileNode(String directory, String fileName, String fileExtension, int osType){
+			this.directory = directory;
+			this.fileName = fileName;
+			this.fileExtension = fileExtension;
+			this.osType = osType;
+		}
+		
+		private void parse(final String absoluteName){
+			int i;
+			for (i = absoluteName.length() - 1; i >= 0 ; i--){
+				if (absoluteName.charAt(i)=='/' || absoluteName.charAt(i) == '\\'){
+					break;
+				}
+			}
+			String wholeFileName = new String(absoluteName);
+			if (i > 0){
+				// There is a directory for the file
+				this.directory = absoluteName.substring(0, i);
+				if (i + 1 < absoluteName.length())
+					wholeFileName = absoluteName.substring(i+1);
+			}
+			
+			for (i = wholeFileName.length() - 1; i >= 0; i--){
+				if (wholeFileName.charAt(i) == '.'){
+					break;
+				}
+			}
+			if (i < 0 || i == wholeFileName.length() - 1){
+				this.fileName = wholeFileName;
+			}else{
+				// There is an extension for the file
+				this.fileName = wholeFileName.substring(0, i);
+				this.fileExtension = wholeFileName.substring(i+1);
+			}
+		}
+		
+		@Override
+		public String toString(){
+			StringBuilder sb = new StringBuilder();
+			String combine = "/";
+			if (osType == WINDOW_TYPE){
+				combine = "\\";
+			}
+			if (directory != null){
+				sb.append(directory).append(combine);
+			}
+			if (fileName != null){
+				sb.append(fileName);
+			}
+			if (fileExtension != null){
+				sb.append(".").append(fileExtension);
+			}
+			return sb.toString();
+		}
+	}
 }
