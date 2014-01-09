@@ -34,6 +34,10 @@ public class CombinationGenerator<T> implements Iterator<List<T>>{
 	}
 
 	private boolean internalHasNext(){
+		if (first){
+			first = false;
+			return !completed;
+		}
 		int i;
 		for (i = num - 1; i >=0 ; i--){
 			if (ind[i] != this.data.size()-num+i)
@@ -41,8 +45,7 @@ public class CombinationGenerator<T> implements Iterator<List<T>>{
 		}
 		if (i >= 0){
 			completed = false;
-			if (!first)	internalNext();		//At first time, do not move to the next element		
-			first = false;
+			internalNext();		//At first time, do not move to the next element		
 			return true;
 		}
 		completed = true;
@@ -76,7 +79,7 @@ public class CombinationGenerator<T> implements Iterator<List<T>>{
 	@Override
 	public List<T> next() {
 		if (completed)	return null; 
-		List<T> res = new ArrayList<T>();
+		List<T> res = new ArrayList<T>(num);
 		for (int i = 0 ; i < num ; i ++){
 			res.add(this.data.get(ind[i]));
 		}		
@@ -85,8 +88,7 @@ public class CombinationGenerator<T> implements Iterator<List<T>>{
 
 	@Override
 	public void remove() {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 	
 	

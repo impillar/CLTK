@@ -1,9 +1,14 @@
 package edu.ntu.cltk.file;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
@@ -117,6 +122,32 @@ public class FileUtil {
 			fileNode.fileName = addition + fileNode.fileName;
 		}
 		return fileNode.toString();
+	}
+	
+	public static List<String> readFileLineByLine(String fileName){
+		
+		List<String> res = new ArrayList<String>();
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(fileName));
+			String line = null;
+			while (null != (line = br.readLine())){
+				res.add(line);
+			}
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		} finally{
+			if (br == null){
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return res;
 	}
 	
 	/**

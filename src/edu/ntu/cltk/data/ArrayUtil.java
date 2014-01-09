@@ -5,6 +5,54 @@ import java.util.List;
 
 public class ArrayUtil {
 
+	/**
+	 * Serialise the one-dimension array with a separator <br />
+	 * For example: <br/>
+	 * List:	 a, b, c<br/>
+	 * Separator: ","<br/>
+	 * leftDelimiter: null<br/> 
+	 * rightDelimiter: null<br/>
+	 * The result will be a,b,c
+	 * @param <T>
+	 * @param data
+	 * @param separator
+	 * @param leftDelimiter
+	 * @param rightDelimiter
+	 * @return
+	 */
+	public static <T> String serializeArray(T[] data, String separator, String leftDelimiter, String rightDelimiter){
+		if (data == null || data.length == 0)	return "";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0 ; i < data.length; i++){
+			if (i > 0)	sb.append(separator);
+			if (leftDelimiter!=null)	sb.append(leftDelimiter);
+			sb.append(data[i].toString());
+			if (rightDelimiter!=null)	sb.append(rightDelimiter);
+		}
+		return sb.toString();
+	}
+	
+	public static String serializeArray(List<?> data, String separator){
+		return serializeArray((data==null?null:data.toArray()), separator, null, null);
+	}
+	
+	public static <T> String serializeArray(T[] data, String separator){
+		return serializeArray(data, separator, null, null);
+	}
+	
+	public static <T> String serializeArray(List<T> data, String separator, String leftDelimiter, String rightDelimiter){
+		return serializeArray((data==null?null:data.toArray()), separator, leftDelimiter, rightDelimiter);
+	}
+	/**
+	 * Make a new array for one string and a string array <br />
+	 * For example:	<br />
+	 * String str = "abc"; <br/>
+	 * String[] item = {"c","d","e"}; <br/>
+	 * Then the result will be an array {"abc","c","d","e"}
+	 * @param str
+	 * @param item
+	 * @return
+	 */
 	public static String[] makeArray(final String str, final String [] item){
 		List<String> res = new ArrayList<String>(item.length + 1){{
 			add(str);
