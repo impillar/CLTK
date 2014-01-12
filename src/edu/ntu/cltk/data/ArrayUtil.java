@@ -277,4 +277,28 @@ public class ArrayUtil {
 		
 		return res.toArray(new Boolean[res.size()]);
 	}
+	
+	/**
+	 * Determine if dst is included in src
+	 * @param <T>
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static <T> boolean contains(final T[] src, final T[] dst){
+		for (int i = 0 ; i < dst.length; i++){
+			int j = 0;
+			for (; j < src.length; j++){
+				if (src[j].equals(dst[i])){
+					break;
+				}
+			}
+			if (j >= src.length)	return false;
+		}
+		return true;
+	}
+	
+	public static boolean contains(final List<?> src, final List<?> dst){
+		return contains(src.toArray(), dst.toArray());
+	}
 }

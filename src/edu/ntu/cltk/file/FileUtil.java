@@ -237,4 +237,21 @@ public class FileUtil {
 			return sb.toString();
 		}
 	}
+	/**
+	 * Delete a file
+	 * @param fileName
+	 * @return true/false
+	 */
+	public static boolean deleteFile(String fileName){
+		File file = new File(fileName);
+		return file.delete();
+	}
+	/**
+	 * Clear the content of the file, the file still exists
+	 * @param fileName
+	 * @return
+	 */
+	public static boolean clearFile(String fileName){
+		return writeFile(fileName, "", "w");
+	}
 }
