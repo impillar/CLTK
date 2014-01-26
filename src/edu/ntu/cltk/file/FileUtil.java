@@ -12,6 +12,9 @@ import java.util.List;
 
 public class FileUtil {
 
+	public static final String FILE_OVERWRITE = "w";
+	public static final String FILE_APPEND = "a";
+	
 	/**
 	 * Check if the file exists
 	 * @param path file name
@@ -63,12 +66,13 @@ public class FileUtil {
 	public static boolean writeFile(String filePath, String content, String option){
 		BufferedWriter bufWriter = null;
 		try {
-			bufWriter = new BufferedWriter(new FileWriter(filePath));
+			
 			if (option.contains("a")){
-				bufWriter.append(content);
+				bufWriter = new BufferedWriter(new FileWriter(filePath, true));
 			}else{
-				bufWriter.write(content);
+				bufWriter = new BufferedWriter(new FileWriter(filePath, true));			
 			}
+			bufWriter.write(content+"\n");
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -115,6 +119,7 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String combineName(String fileName, String addition, int option){
+		if (fileName == null)	return null;
 		FileUtil.FileNode fileNode = new FileNode(fileName);
 		if (option == FILE_COMBINE_SUFFIX){
 			fileNode.fileName = fileNode.fileName + addition;
