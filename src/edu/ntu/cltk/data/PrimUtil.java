@@ -1,11 +1,12 @@
 package edu.ntu.cltk.data;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.validator.routines.UrlValidator;
 
 import edu.ntu.cltk.crypto.CryptoUtil;
 
@@ -48,7 +49,7 @@ public class PrimUtil {
 	 * @param s
 	 * @return
 	 */
-	public static boolean isPositiveInteger(String s){
+	public static boolean isNonNegativeInteger(String s){
 		if (s == null || s.length() == 0)	return false;
 		for (int i = 0; i < s.length(); i++) {
 			if (s.charAt(i) > '9' || s.charAt(i) < '0')
@@ -57,7 +58,7 @@ public class PrimUtil {
 		return true;
 	}
 	
-	public static boolean isNagativeInteger(String s){
+	public static boolean isNonPositiveInteger(String s){
 		if (s == null || s.length() == 0 || s.charAt(0) != '-')	return false;
 		for (int i = 1; i < s.length(); i++) {
 			if (s.charAt(i) > '9' || s.charAt(i) < '0')
@@ -81,7 +82,7 @@ public class PrimUtil {
 		//If there are many occurrences of ., return false;
 		if (s.indexOf('.', dot + 1) != -1)	return false;
 		
-		return isInteger(s.substring(0, dot - 1)) && isPositiveInteger(s.substring(dot + 1));
+		return isInteger(s.substring(0, dot - 1)) && isNonNegativeInteger(s.substring(dot + 1));
 		
 	}
 
@@ -188,6 +189,16 @@ public class PrimUtil {
 	 */
 	public static boolean isASCII(char c) {
 		return (c & (1 << 7)) == 0;
+	}
+	
+	/**
+	 * Determine if the string is a url or not
+	 * @param str
+	 * @return
+	 */
+	public static boolean isUrl(String str) {
+		UrlValidator urlVal = new UrlValidator();
+		return urlVal.isValid(str);
 	}
 	
 }

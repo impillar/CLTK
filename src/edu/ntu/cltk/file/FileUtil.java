@@ -148,7 +148,7 @@ public class FileUtil {
 				try {
 					br.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		}

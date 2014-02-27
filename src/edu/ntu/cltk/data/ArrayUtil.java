@@ -301,4 +301,64 @@ public class ArrayUtil {
 	public static boolean contains(final List<?> src, final List<?> dst){
 		return contains(src.toArray(), dst.toArray());
 	}
+	
+	/**
+	 * Convert the array from the object to the primitive type
+	 * @param nums
+	 * @return
+	 */
+	public static double[] toPrimitive(Double[] nums){
+		double[] converted = new double[nums.length];
+		for (int i = 0 ; i < nums.length; i++){
+			// Java 1.4
+			converted[i] = nums[i].doubleValue();
+			// Java 1.5
+			// converted[i] = nums[i];
+		}
+		return converted;
+	}
+	
+	public static int[] toPrimitive(Integer[] nums){
+		int[] converted = new int[nums.length];
+		for (int i = 0 ; i < nums.length; i++){
+			// Java 1.4
+			converted[i] = nums[i].intValue();
+			// Java 1.5
+			// converted[i] = nums[i];
+		}
+		return converted;
+	}
+	
+	public static long[] toPrimitive(Long[] nums){
+		long[] converted = new long[nums.length];
+		for (int i = 0 ; i < nums.length; i++){
+			// Java 1.4
+			converted[i] = nums[i].longValue();
+			// Java 1.5
+			// converted[i] = nums[i];
+		}
+		return converted;
+	}
+	
+	public static float[] toPrimitive(Float[] nums){
+		float[] converted = new float[nums.length];
+		for (int i = 0 ; i < nums.length; i++){
+			// Java 1.4
+			converted[i] = nums[i].floatValue();
+			// Java 1.5
+			// converted[i] = nums[i];
+		}
+		return converted;
+	}
+	
+	public static short[] toPrimitive(Short[] nums){
+		short[] converted = new short[nums.length];
+		for (int i = 0 ; i < nums.length; i++){
+			// Java 1.4
+			converted[i] = nums[i].shortValue();
+			// Java 1.5
+			// converted[i] = nums[i];
+		}
+		return converted;
+	}
 }

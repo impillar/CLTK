@@ -8,6 +8,8 @@ import java.nio.charset.Charset;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
 
+import edu.ntu.cltk.data.PrimUtil;
+
 public class CryptoUtil {
 
 	/**
@@ -53,5 +55,48 @@ public class CryptoUtil {
 	public static String urlDecoding(String encoded) throws UnsupportedEncodingException {
 		Charset charset = Charsets.UTF_8;
 		return URLDecoder.decode(encoded, charset.name());
+	}
+	
+	/**
+	 * Luhn Algorithm
+	 * http://en.wikipedia.org/wiki/Luhn_algorithm <br/>
+	 * The Luhn algorithm or Luhn formula, also known as <br/>
+	 * the "modulus 10" or "mod 10" algorithm, is a simple <br/>
+	 * checksum formula used to validate a variety of <br/>
+	 * identification numbers, such as credit card numbers, <br/>
+	 * IMEI numbers, National Provider Identifier numbers in <br/>
+	 * US and Canadian Social Insurance Numbers. It was created <br/>
+	 * by IBM scientist Hans Peter Luhn and described in U.S. <br/>
+	 * Patent No. 2,950,048, filed on January 6, 1954, <br/>
+	 * and granted on August 23, 1960.
+	 * @param number
+	 * @return
+	 */
+	public static boolean luhnChecker(String number){
+		if (PrimUtil.isNonNegativeInteger(number) && number.length() > 2){
+			int num = number.charAt(number.length()-1) - '0';
+			return (luhnChecksum(number.substring(0, number.length()-1)) == num);
+		}
+		return false;
+	}
+	
+	public static int luhnChecksum(String number){
+		if (PrimUtil.isNonNegativeInteger(number)){
+			int sum = 0;
+			for (int i = 0 ; i < number.length(); i++){
+				int num = number.charAt(i) - '0';
+				if (i % 2 == 0){
+					sum += num;
+				}else{
+					num *= 2;
+					while (num > 0){
+						sum += num % 10;
+						num /= 10;
+					}
+				}
+			}
+			return ((sum / 10 + 1) * 10 - sum) % 10;
+		}
+		return -1;
 	}
 }

@@ -33,4 +33,31 @@ public class MathUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * Get the variance for the list of the numbers
+	 * @param nums
+	 * @return
+	 */
+	public static double variance(double[] nums){
+		double sum = 0;
+		for (int i = 0 ; i < nums.length;i++){
+			sum += nums[i];
+		}
+		double avg = sum / nums.length;
+		double res = 0;
+		for (int i = 0 ; i < nums.length; i++){
+			res += (nums[i] - avg) * (nums[i] - avg);
+		}
+		return res;
+	}
+	
+	/**
+	 * Calculate the deviation for the list of the numbers
+	 * @param nums
+	 * @return
+	 */
+	public static double deviation(double[] nums){
+		return Math.sqrt(variance(nums));
+	}
 }
