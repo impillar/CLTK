@@ -80,7 +80,10 @@ public class AndroidInfoUtil {
 	public static boolean isIMEI(String number) {
 		if (number == null)
 			return false;
-		return CryptoUtil.luhnChecker(number);
+		if (PrimUtil.isNonNegativeInteger(number) && number.length() == 15){
+			return CryptoUtil.luhnChecker(number);
+		}
+		return false;		
 	}
 
 	/**
@@ -107,5 +110,31 @@ public class AndroidInfoUtil {
 	 */
 	public static boolean isBrowserHistory(String url) {
 		return PrimUtil.isUrl(url);
+	}
+	
+	/**
+	 * Check if the string is a phone number
+	 * @param number
+	 * @return
+	 */
+	public static boolean isPhoneNumber(String number){
+		return false;
+	}
+	/**
+	 * Check if the string is a location
+	 * @param location
+	 * @return
+	 */
+	public static boolean isLocation(String location){
+		return false;
+	}
+	
+	/**
+	 * Check if the string is an email
+	 * @param email
+	 * @return
+	 */
+	public static boolean isEmail(String email){
+		return false;
 	}
 }

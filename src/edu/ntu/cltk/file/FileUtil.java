@@ -129,6 +129,17 @@ public class FileUtil {
 		return fileNode.toString();
 	}
 	
+	/**
+	 * Get the extension for one file
+	 * @param fileName
+	 * @return
+	 */
+	public static String getFileExtension(String fileName){
+		if (fileName == null)	return null;
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		return fileNode.fileExtension;
+	}
+	
 	public static List<String> readFileLineByLine(String fileName){
 		
 		List<String> res = new ArrayList<String>();
