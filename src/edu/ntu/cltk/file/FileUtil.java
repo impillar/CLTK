@@ -64,13 +64,22 @@ public class FileUtil {
 	 * @return
 	 */
 	public static boolean writeFile(String filePath, String content, String option){
+		
+		File file = new File(filePath);
+		if (!file.exists()){
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				return false;
+			}
+		}
+		
 		BufferedWriter bufWriter = null;
 		try {
-			
 			if (option.contains("a")){
 				bufWriter = new BufferedWriter(new FileWriter(filePath, true));
 			}else{
-				bufWriter = new BufferedWriter(new FileWriter(filePath, true));			
+				bufWriter = new BufferedWriter(new FileWriter(filePath, false));			
 			}
 			bufWriter.write(content+"\n");
 			return true;
