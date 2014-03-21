@@ -201,4 +201,30 @@ public class PrimUtil {
 		return urlVal.isValid(str);
 	}
 	
+	/**
+	 * Check if one double value equals to zero
+	 * @param obj
+	 * @param precision
+	 * @return
+	 */
+	public static boolean equalsToZero(double obj, int precision){
+		return Math.abs(obj) <= Math.pow(0.1, precision);
+	}
+	
+	public static boolean equalsToZero(double obj){
+		return equalsToZero(obj, 6);
+	}
+	/**
+	 * Check if one double value equals to a specific value
+	 * @param obj
+	 * @param value
+	 * @return
+	 */
+	public static boolean equalsTo(double obj, double value){
+		return equalsTo(obj, value, 6);
+	}
+	
+	public static boolean equalsTo(double obj, double value, int precision){
+		return Math.abs(obj - value) <= Math.pow(0.1, precision);
+	}
 }

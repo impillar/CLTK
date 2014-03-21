@@ -11,17 +11,17 @@ import edu.ntu.cltk.data.ArrayUtil;
 
 public class FileRetrieval implements Iterator {
 
-	private int DFS_RETRIEVAL = 0;
-	private int BFS_RETRIEVAL = 1;
+	public static int DFS_RETRIEVAL = 0;
+	public static int BFS_RETRIEVAL = 1;
 
-	private int SORT_BY_TYPE_ASC = 1;
-	private int SORT_BY_TYPE_DEC = 2;
-	private int SORT_BY_NAME_ASC = 4;
-	private int SORT_BY_NAME_DEC = 8;
-	private int SORT_BY_LAST_MODIFIED_ASC = 16;
-	private int SORT_BY_LAST_MODIFIED_DEC = 32;
-	private int SORT_BY_SIZE_ASC = 64;
-	private int SORT_BY_SIZE_DEC = 128;
+	public static int SORT_BY_TYPE_ASC = 1;
+	public static int SORT_BY_TYPE_DEC = 2;
+	public static int SORT_BY_NAME_ASC = 4;
+	public static int SORT_BY_NAME_DEC = 8;
+	public static int SORT_BY_LAST_MODIFIED_ASC = 16;
+	public static int SORT_BY_LAST_MODIFIED_DEC = 32;
+	public static int SORT_BY_SIZE_ASC = 64;
+	public static int SORT_BY_SIZE_DEC = 128;
 	
 	private String directory = "";
 	//File extensions will be changed to lower case for comparison
@@ -39,7 +39,7 @@ public class FileRetrieval implements Iterator {
 	//txt|jpg|mp4
 	public FileRetrieval(String direct, String fileEx){
 		this.directory = direct;
-		fileExtensions = fileEx.split("|");
+		fileExtensions = fileEx.split("\\|");
 		for (int i = 0; i < fileExtensions.length; i++){
 			fileExtensions[i] = fileExtensions[i].toLowerCase();
 		}
@@ -49,7 +49,7 @@ public class FileRetrieval implements Iterator {
 	public FileRetrieval(String direct, String fileRg, String fileEx){
 		this.directory = direct;
 		this.fileReg = fileRg;
-		fileExtensions = fileEx.split("|");
+		fileExtensions = fileEx.split("\\|");
 		for (int i = 0; i < fileExtensions.length; i++){
 			fileExtensions[i] = fileExtensions[i].toLowerCase();
 		}
@@ -98,7 +98,7 @@ public class FileRetrieval implements Iterator {
 				}
 			}
 		}
-;		directs = null;
+		directs = null;
 		return count;
 	}
 	
@@ -122,7 +122,10 @@ public class FileRetrieval implements Iterator {
 			//TODO: Need for implementation
 		}
 		if (fileExtensions != null && fileExtensions.length != 0){
-			String extension = FileUtil.getFileExtension(name).toLowerCase();
+			String extension = FileUtil.getFileExtension(name);
+			if (extension!=null){
+				extension = extension.toLowerCase();
+			}
 			if (!ArrayUtil.contains(fileExtensions, extension)){
 				return false;
 			}
@@ -283,7 +286,7 @@ public class FileRetrieval implements Iterator {
 		
 	}
 	
-	private class INode{
+	public class INode{
 		public static final int FILE = 0;
 		public static final int FOLDER = 1;
 		public int type;

@@ -286,6 +286,7 @@ public class ArrayUtil {
 	 * @return
 	 */
 	public static <T> boolean contains(final T[] src, final T[] dst){
+		if (src == null || dst == null)	return false;
 		for (int i = 0 ; i < dst.length; i++){
 			int j = 0;
 			for (; j < src.length; j++){
@@ -306,6 +307,7 @@ public class ArrayUtil {
 	 * @return
 	 */
 	public static <T> boolean contains(final T[] src, final T dst){
+		if (dst == null || src == null)	return false;
 		for (int i = 0 ; i < src.length; i++){
 			if (src[i].equals(dst)){
 				return true;

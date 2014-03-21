@@ -26,6 +26,26 @@ public class FileUtil {
 	}
 	
 	/**
+	 * First check if the file exists, secondly, identify whether the path is a file or not
+	 * @param path
+	 * @return
+	 */
+	public static boolean isFile(String path){
+		File file = new File(path);
+		return (file.exists() && file.isFile());
+	}
+	
+	/**
+	 * First check if the file exists, secondly, identify whether the path is a folder or not
+	 * @param path
+	 * @return
+	 */
+	public static boolean isFolder(String path){
+		File file = new File(path);
+		return (file.exists() && file.isDirectory());
+	}
+	
+	/**
 	 * Create the folder if not exists
 	 * @param path
 	 * @return
@@ -164,7 +184,7 @@ public class FileUtil {
 		} catch (IOException e) {
 			return null;
 		} finally{
-			if (br == null){
+			if (br != null){
 				try {
 					br.close();
 				} catch (IOException e) {
@@ -278,5 +298,40 @@ public class FileUtil {
 	 */
 	public static boolean clearFile(String fileName){
 		return writeFile(fileName, "", "w");
+	}
+	
+	/**
+	 * Count the number of folders under the folder filePath
+	 * @param filePath
+	 * @return
+	 */
+	public static int numberOfFolders(String filePath){
+		File file = new File(filePath);
+		int count = 0;
+		if (file.isDirectory()){
+			for (File f : file.listFiles()){
+				if (f.isDirectory()){
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	/**
+	 * Count the number of files under the folder filePath
+	 * @param filePath
+	 * @return
+	 */
+	public static int numberOfFiles(String filePath){
+		File file = new File(filePath);
+		int count = 0;
+		if (file.isDirectory()){
+			for (File f : file.listFiles()){
+				if (f.isFile()){
+					count++;
+				}
+			}
+		}
+		return count;
 	}
 }
