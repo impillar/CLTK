@@ -79,8 +79,9 @@ public class Percentile<T> {
      */
     public T evaluate(double quantile){
     	synchronized(this._orig){
-    		int i = (int) Math.round(quantile * this._orig.size() / 100);
-    		if (i >= this._orig.size())	return null;
+    		int i = ((int) Math.round(quantile * this._orig.size() / 100)) - 1;
+    		if (i < 0)	i = 0;
+    		if (i >= this._orig.size())	i--;
     		return (T) this._orig.get(i);
     	}
     	

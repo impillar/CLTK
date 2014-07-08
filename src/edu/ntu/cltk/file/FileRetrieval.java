@@ -31,12 +31,22 @@ public class FileRetrieval implements Iterator {
 	private Stack<INode> files;
 	private int option = DFS_RETRIEVAL;
 	private int sortBy = SORT_BY_NAME_ASC;
+	private int depth = 0;
 	
+	/**
+	 * The constructor of FileRetrieval
+	 * @param direct	The directory to be retrieved
+	 */
 	public FileRetrieval(String direct){
 		this.directory = direct;
 		init();
 	}
 	//txt|jpg|mp4
+	/**
+	 * The constructor of FileRetrieval
+	 * @param direct	The directory to be retrieved
+	 * @param fileEx	Only choose the file with the specific extension
+	 */
 	public FileRetrieval(String direct, String fileEx){
 		this.directory = direct;
 		fileExtensions = fileEx.split("\\|");
@@ -45,7 +55,12 @@ public class FileRetrieval implements Iterator {
 		}
 		init();
 	}
-	
+	/**
+	 * The constructor of FileRetrieval
+	 * @param direct	The directory to be retrieved
+	 * @param fileRg	The file name should follow a specific regression
+	 * @param fileEx	Only choose the file with the specific extension
+	 */
 	public FileRetrieval(String direct, String fileRg, String fileEx){
 		this.directory = direct;
 		this.fileReg = fileRg;
@@ -54,6 +69,18 @@ public class FileRetrieval implements Iterator {
 			fileExtensions[i] = fileExtensions[i].toLowerCase();
 		}
 		init();
+	}
+	/**
+	 * Set the depth for searching. <br/>
+	 * 0 : infinite	<br/>
+	 * 1  : the current folder<br/>
+	 * 2  : the current folder and the children folders<br/>
+	 * 3  : the current folder, the children folders and the grand children folders<br/>
+	 * ...
+	 * @param num
+	 */
+	public void setDepth(int num){
+		this.depth = num;
 	}
 	
 	public void setSortBy(int sort){
@@ -67,10 +94,13 @@ public class FileRetrieval implements Iterator {
 	private void init(){
 		files = new Stack<INode>();
 		if (directory != null){
-			files.add(new INode(INode.FOLDER, directory));
+			files.add(new INode(INode.FOLDER, directory, 0));
 		}
 	}
-	
+	/**
+	 * Count the total number of files
+	 * @return
+	 */
 	public int count(){
 		int count = 0;
 		Stack<String> directs = new Stack<String>();
@@ -143,9 +173,11 @@ public class FileRetrieval implements Iterator {
 	}
 	
 	private File[] getUnderFiles(File file){
+		if (file == null)	return null;
 		File[] files = null;
 		if (file.isDirectory()){
 			files = file.listFiles();
+			if (files == null)	return null;
 			Arrays.sort(files, new Comparator<File>(){
 
 				@Override
@@ -199,6 +231,8 @@ public class FileRetrieval implements Iterator {
 	private void dfs(){
 		while (!files.empty() && files.peek().type == INode.FOLDER){
 			INode current = files.pop();
+			int curDepth = current.depth;
+			if (this.depth != 0 && curDepth >= this.depth)	continue;
 			
 			File[] filesUnderFolder = getUnderFiles(new File(current.path));
 			if (filesUnderFolder != null){
@@ -207,7 +241,7 @@ public class FileRetrieval implements Iterator {
 					File f = filesUnderFolder[i];
 					if (f.isFile() && satisfied(f.getName())){
 						try {
-							files.add(new INode(INode.FILE, f.getCanonicalPath()));
+							files.add(new INode(INode.FILE, f.getCanonicalPath(), curDepth+1));
 						} catch (IOException e) {
 							//Do nothing after release
 							e.printStackTrace();
@@ -215,15 +249,16 @@ public class FileRetrieval implements Iterator {
 					}
 				}
 				
-				
-				for (int i = filesUnderFolder.length - 1; i >= 0; i--){
-					File f = filesUnderFolder[i];
-					if (f.isDirectory()){
-						try {
-							files.add(new INode(INode.FOLDER, f.getCanonicalPath()));
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+				if (this.depth == 0 || curDepth + 1 < this.depth){
+					for (int i = filesUnderFolder.length - 1; i >= 0; i--){
+						File f = filesUnderFolder[i];
+						if (f.isDirectory()){
+							try {
+								files.add(new INode(INode.FOLDER, f.getCanonicalPath(), curDepth+1));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -248,6 +283,8 @@ public class FileRetrieval implements Iterator {
 	private void bfs(){
 		while (!files.empty() && files.peek().type == INode.FOLDER){
 			INode current = files.pop();
+			int curDepth = current.depth;
+			if (this.depth != 0 && curDepth >= this.depth)	continue;
 			
 			File[] filesUnderFolder = getUnderFiles(new File(current.path));
 			if (filesUnderFolder != null){
@@ -256,7 +293,7 @@ public class FileRetrieval implements Iterator {
 					File f = filesUnderFolder[i];
 					if (f.isDirectory()){
 						try {
-							files.add(new INode(INode.FOLDER, f.getCanonicalPath()));
+							files.add(new INode(INode.FOLDER, f.getCanonicalPath(), curDepth+1));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -264,14 +301,16 @@ public class FileRetrieval implements Iterator {
 					}
 				}
 				
-				for (int i = filesUnderFolder.length - 1 ; i >= 0; i--){
-					File f = filesUnderFolder[i];
-					if (f.isFile() && satisfied(f.getName())){
-						try {
-							files.add(new INode(INode.FILE, f.getCanonicalPath()));
-						} catch (IOException e) {
-							//Do nothing after release
-							e.printStackTrace();
+				if (this.depth == 0 || curDepth + 1 < this.depth){
+					for (int i = filesUnderFolder.length - 1 ; i >= 0; i--){
+						File f = filesUnderFolder[i];
+						if (f.isFile() && satisfied(f.getName())){
+							try {
+								files.add(new INode(INode.FILE, f.getCanonicalPath(), curDepth+1));
+							} catch (IOException e) {
+								//Do nothing after release
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -291,10 +330,12 @@ public class FileRetrieval implements Iterator {
 		public static final int FOLDER = 1;
 		public int type;
 		public String path;
+		public int depth = 0;
 		
-		public INode(int type, String path){
+		public INode(int type, String path, int depth){
 			this.type = type;
 			this.path = path;
+			this.depth = depth;
 		}
 		
 		@Override

@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ntu.cltk.data.StringUtil;
+
 public class FileUtil {
 
 	public static final String FILE_OVERWRITE = "w";
@@ -169,6 +171,49 @@ public class FileUtil {
 		return fileNode.fileExtension;
 	}
 	
+	/**
+	 * Get the parent directory for one file
+	 * @param fileName
+	 * @return
+	 */
+	public static String getParentDirectory(String fileName){
+		if (fileName == null)	return null;
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		return fileNode.getParentDirectory();
+	}
+	
+	public static String getCanonicalParentDirectory(String fileName){
+		if (fileName == null)	return null;
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		return fileNode.directory;
+	}
+	
+	/**
+	 * Get the name of the file 
+	 * @param filename
+	 * @return
+	 */
+	public static String getFileName(String fileName){
+		if (fileName == null)	return null;
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		return fileNode.fileName;
+	}
+	
+	/**
+	 * Change the extension of one file
+	 * @param fileName
+	 * @param extension
+	 * @return
+	 */
+	public static String changeFileExtension(String fileName, String extension){
+		if (extension != null && fileName != null){
+			FileUtil.FileNode fileNode = new FileNode(fileName);
+			fileNode.fileExtension = extension;
+			return fileNode.toString();
+		}
+		return null;
+	}
+	
 	public static List<String> readFileLineByLine(String fileName){
 		
 		List<String> res = new ArrayList<String>();
@@ -234,6 +279,17 @@ public class FileUtil {
 			this.osType = osType;
 		}
 		
+		public String getParentDirectory(){
+			if (directory == null)	return null;
+			int i = directory.length()-1;
+			for (; i >= 0; i--){
+				if (directory.charAt(i) == '\\' || directory.charAt(i) == '/'){
+					break;
+				}
+			}
+			return directory.substring(i+1);
+		}
+		
 		private void parse(final String absoluteName){
 			int i;
 			for (i = absoluteName.length() - 1; i >= 0 ; i--){
@@ -243,10 +299,15 @@ public class FileUtil {
 			}
 			String wholeFileName = new String(absoluteName);
 			if (i > 0){
-				// There is a directory for the file
-				this.directory = absoluteName.substring(0, i);
 				if (i + 1 < absoluteName.length())
 					wholeFileName = absoluteName.substring(i+1);
+				
+				// There is a directory for the file
+				//while (i>=0&&(absoluteName.charAt(i) == '/' || absoluteName.charAt(i)=='\\')){
+				//	i--;
+				//}
+				if (i>0)
+					this.directory = absoluteName.substring(0, i);
 			}
 			
 			for (i = wholeFileName.length() - 1; i >= 0; i--){
@@ -276,7 +337,8 @@ public class FileUtil {
 			if (fileName != null){
 				sb.append(fileName);
 			}
-			if (fileExtension != null){
+			if (!StringUtil.isEmpty(fileExtension)){	
+				//If the fileExtension is null or "", omit this process
 				sb.append(".").append(fileExtension);
 			}
 			return sb.toString();
@@ -290,6 +352,71 @@ public class FileUtil {
 	public static boolean deleteFile(String fileName){
 		File file = new File(fileName);
 		return file.delete();
+	}
+	
+	/**
+	 * Delete a directory
+	 * @param directory
+	 * @return
+	 */
+	public static boolean deleteDirectory(String path) throws IOException {
+		File directory = new File(path);
+		if (!directory.exists()) {
+			return false;
+		}
+
+		cleanDirectory(directory);
+		if (!directory.delete()) {
+			String message = "Unable to delete directory " + directory + ".";
+			throw new IOException(message);
+		}
+		return true;
+	}
+	
+	public static void cleanDirectory(File directory) throws IOException {
+		if (!directory.exists()) {
+			String message = directory + " does not exist";
+			throw new IllegalArgumentException(message);
+		}
+
+		if (!directory.isDirectory()) {
+			String message = directory + " is not a directory";
+			throw new IllegalArgumentException(message);
+		}
+
+		File[] files = directory.listFiles();
+		if (files == null) { // null if security restricted
+			throw new IOException("Failed to list contents of " + directory);
+		}
+
+		IOException exception = null;
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			try {
+				forceDelete(file);
+			} catch (IOException ioe) {
+				exception = ioe;
+			}
+		}
+
+		if (null != exception) {
+			throw exception;
+		}
+	}
+
+	public static void forceDelete(File file) throws IOException {
+		if (file.isDirectory()) {
+			deleteDirectory(file.getCanonicalPath());
+	    } else {
+	    	boolean filePresent = file.exists();
+		    if (!file.delete()) {
+		    	if (!filePresent){
+		    		throw new FileNotFoundException("File does not exist: " + file);
+		        }
+		        String message = "Unable to delete file: " + file;
+		        throw new IOException(message);
+		    }
+	    }
 	}
 	/**
 	 * Clear the content of the file, the file still exists

@@ -43,4 +43,21 @@ public class StringUtil {
 			return sb.subSequence(0, sb.length() - 1).toString();
 		return sb.toString();
 	}
+	
+	/**
+	 * Return the
+	 * @param str
+	 * @param len
+	 * @param suffix
+	 * @return
+	 */
+	public static String truncate(String str, int len, String suffix){
+		if (str == null || suffix == null || len < -1)	return null;
+		int sLen = suffix.length();
+		if (str.length() <= len){
+			return str;
+		}
+		if (sLen >= len)	return suffix;
+		return str.substring(0, len-sLen) + suffix;
+	}
 }

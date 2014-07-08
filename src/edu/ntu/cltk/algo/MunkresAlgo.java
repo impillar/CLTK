@@ -16,6 +16,25 @@ public class MunkresAlgo {
 	private int pathCol0 = 0;
 	private int[][] path;
 	private int pathCount;
+	
+	/**
+	 * Find the maximal Assignment
+	 * @param matrix
+	 * @return
+	 */
+	public double maximalAssignment(double[][] matrix){
+		if (MatrixUtil.isEmpty(matrix)){
+			return 0;
+		}
+		double[][] rep = new double[matrix.length][matrix[0].length];
+		for (int i = 0 ; i < matrix.length; i++){
+			for (int j = 0 ; j < matrix[i].length; j++){
+				rep[i][j] = -1 * matrix[i][j];
+			}
+		}
+		return -1 * minimalAssignment(rep);
+	}
+	
 	/**
 	 * Find the minimal assignment
 	 * @param matrix
@@ -100,15 +119,27 @@ public class MunkresAlgo {
 			}
 		}
 		double ret = 0;
+		matchingCount = 0;
 		for (int i = 0 ; i < munkresRowCount; i++){
 			for (int j = 0 ; j < munkresColCount; j++){
 				if (munkresMark[i][j] == 1){
 					ret += origMunkresMatrix[i][j];
+					matchingCount++;
 				}
 			}
 		}
 		return ret;
 	}
+	
+	private int matchingCount = 0;
+	/**
+	 * Get the matching count
+	 * @return
+	 */
+	public int getMatchingCount(){
+		return this.matchingCount;
+	}
+	
 	/**
 	 * Step 1:  For each row of the matrix, find the smallest element <br/>
 	 * and subtract it from every element in its row.  Go to Step 2.
