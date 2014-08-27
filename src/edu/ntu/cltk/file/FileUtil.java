@@ -461,4 +461,14 @@ public class FileUtil {
 		}
 		return count;
 	}
+	/**
+	 * Get the lenght of the file. If the file does not exist, return 0
+	 * @param filePath
+	 * @return
+	 */
+	public static long getFileSize(String filePath){
+		File file = new File(filePath);
+		if (file == null)	return 0;
+		return file.length();
+	}
 }
