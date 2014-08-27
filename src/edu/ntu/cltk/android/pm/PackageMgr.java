@@ -29,6 +29,7 @@ import android.support.v4.content.pm.ActivityInfoCompat;
  *
  */
 public class PackageMgr {
+	
 	/**
 	 * Get the list of application installed on the device
 	 * @param context
