@@ -471,4 +471,15 @@ public class FileUtil {
 		if (file == null)	return 0;
 		return file.length();
 	}
+	
+	/**
+	 * Touch the file, if it does not exist, create it
+	 * @param filePath
+	 */
+	public static void touchFile(String filePath){
+		FileNode fileNode = new FileNode(filePath);
+		createAllFolder(fileNode.directory);
+		writeFile(filePath, "");
+	}
+
 }
