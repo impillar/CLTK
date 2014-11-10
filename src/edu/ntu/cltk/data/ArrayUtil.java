@@ -1,6 +1,7 @@
 package edu.ntu.cltk.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ArrayUtil {
@@ -30,6 +31,23 @@ public class ArrayUtil {
 			if (rightDelimiter!=null)	sb.append(rightDelimiter);
 		}
 		return sb.toString();
+	}
+	
+	public static <T> String serializeCollection(Collection<T> data, String separator, String leftDelimiter, String rightDelimiter){
+		if (data == null || data.size() == 0)	return "";
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (T d : data){
+			if (!first)	sb.append(separator);
+			if (leftDelimiter!=null)	sb.append(leftDelimiter);
+			sb.append(d);
+			if (rightDelimiter!=null)	sb.append(rightDelimiter);
+		}
+		return sb.toString();
+	}
+	
+	public static <T> String serializeCollection(Collection<T> data, String separator){
+		return serializeCollection(data, separator, null, null);
 	}
 	
 	public static String serializeArray(List<?> data, String separator){
@@ -382,5 +400,26 @@ public class ArrayUtil {
 			// converted[i] = nums[i];
 		}
 		return converted;
+	}
+	
+	public static <T> boolean overlap(T[] arr1, T[] arr2){
+		for (T a1 : arr1){
+			for (T a2 : arr2){
+				if (a1.equals(a2))
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public static <T> boolean overlap(Collection<T> col1, Collection<T> col2){
+		for (T c1 : col1){
+			for (T c2 : col2){
+				if (c1.equals(c2)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
