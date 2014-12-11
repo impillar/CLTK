@@ -42,6 +42,7 @@ public class ArrayUtil {
 			if (leftDelimiter!=null)	sb.append(leftDelimiter);
 			sb.append(d);
 			if (rightDelimiter!=null)	sb.append(rightDelimiter);
+			first = false;
 		}
 		return sb.toString();
 	}
