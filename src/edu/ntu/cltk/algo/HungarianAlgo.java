@@ -10,6 +10,10 @@ import java.util.List;
  * by calling setConfFlag.
  * For example, when setConFlag(0) denotes the cell(i,j) with value 0 means i and j is connected,
  * when setConFlag("connected") denotes the cell(i,j) with value "connected" showing i, j connected  
+ * 
+ * Step 1: Create a new instance of HungarianAlgo
+ * Step 2: Set the flag of matching for different generic types
+ * Step 3: Invoke the functional methods, such as maximalBipartiteGraphMatching
  * @author pillar
  *
  * @param <T>
@@ -37,10 +41,11 @@ public class HungarianAlgo<T> {
 	 * Find the maximal bipartite graph matching
 	 * @param matrix
 	 * @return	an array 
-	 * 			For example, {3, 1, 2} 
+	 * 			For example, {3, 1, 2, -1} 
 	 * 			meaning 1 is connected to 3
 	 * 					2 is connected to 1
 	 * 					3 is connected to 2
+	 * 					4 is connected to NULL
 	 */
 	@SuppressWarnings("unchecked")
 	public int[] maximalBipartiteGraphMatching(T[][] matrix){
@@ -124,7 +129,7 @@ public class HungarianAlgo<T> {
 	 * @return
 	 */
 	private boolean findAugmentingPath(int agent, boolean checkPath){
-		if (checkPath && flagA[agent]==false){	//The node alreay in augmenting path
+		if (checkPath && flagA[agent]==false){	//The node already in augmenting path
 			flagA[agent] = true;
 			for (int i = 0 ; i < adjTable.get(agent).size(); i++){
 				if (adjTable.get(agent).get(i) != augmentingPath[agent] && 
