@@ -3,6 +3,8 @@ package edu.ntu.cltk.android;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.ntu.cltk.data.ArrayUtil;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -112,6 +114,28 @@ public class AndroidContentProviderUtils {
 		}
 		public List<String> getEmails(){
 			return this.emails;
+		}
+		
+		/**
+		 * Export a friend into a JSON format. For example:
+		 * 
+		 * {
+		 * 		"name": "pillar",
+		 * 		"phone": [87493,20394,3944],
+		 * 		"email": [a@dreamfirm.com,b@dreamfirm.com,c@dreamfirm.com]
+		 * }
+		 * @return
+		 */
+		public String exportToJson(){
+			return String.format("{\"name\":%s,\"phone\":[%s],\"email\":[%s]}", 
+					name, 
+					ArrayUtil.serializeArray(phoneNumbers, ","), 
+					ArrayUtil.serializeArray(emails, ","));
+		}
+		
+		@Override
+		public String toString(){
+			return exportToJson();
 		}
 	}
 	
