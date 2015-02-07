@@ -21,6 +21,9 @@ public class AndroidApiRecognizer {
 	private HashMap<String, List<ApiSig>> permMap = new HashMap<String, List<ApiSig>>();
 	private HashMap<ApiSig, List<String>> apiMap = new HashMap<ApiSig, List<String>>();
 	
+	private String[] apis;
+	private String[] permissions;
+	
 	private AndroidApiRecognizer(){
 		parse();
 	}
@@ -140,4 +143,27 @@ public class AndroidApiRecognizer {
 	public boolean isAndroidApi(ApiSig as){
 		return find(as);
 	}
+	
+	public String[] getApis(){
+		if (apis == null){
+			List<String> apiList = new ArrayList<String>();
+			for (ApiSig as : apiMap.keySet()){
+				apiList.add(as.toString());
+			}
+			this.apis = apiList.toArray(new String[apiList.size()]);
+		}
+		return apis;
+	}
+	
+	public String[] getPermissions(){
+		if (permissions == null){
+			List<String> permList = new ArrayList<String>();
+			for (String str : permMap.keySet()){
+				permList.add(str);
+			}
+			this.permissions = permList.toArray(new String[permMap.size()]);
+		}
+		return permissions;
+	}
 }
+
