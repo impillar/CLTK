@@ -1,7 +1,8 @@
 package edu.ntu.cltk.android;
 
+import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
-
 public class ApiSig implements Comparable<ApiSig> {
 
 	private String className;
@@ -95,6 +96,40 @@ public class ApiSig implements Comparable<ApiSig> {
 	@Override
 	public int compareTo(ApiSig o) {
 		return toString().compareTo(o.toString());
+	}
+	
+	/**
+	 * The signature should follows:
+	 * <ClassName: ReturnType MethodName(Parameters)>
+	 * @param apiSig
+	 * @return
+	 * @throws Exception 
+	 */
+	public static ApiSig makeApi(String apiSig) throws Exception{
+		
+		String[] met = apiSig.substring(1, apiSig.length()).replaceAll(":", "").split("\\s");
+		
+		if (met.length != 3 
+				|| met[2].indexOf("(") == -1 
+				|| met[2].charAt(met[2].length()-1)!= '>' 
+				|| met[2].charAt(met[2].length()-2) != ')' 
+				|| met[2].indexOf("(")+1 >= met[2].length()-2){
+			throw new Exception("The signature is not following the format: <ClassName: ReturnType MethodName(Parameters)>");
+		}
+		
+		String className = met[0];
+		String methodName = met[2].substring(0, met[2].indexOf("("));
+		
+		String parStr = met[2].substring(met[2].indexOf("(")+1, met[2].length()-2);
+		String[] parArr = parStr.split(",");
+		List<String> parList = new ArrayList<String>();
+		for (String par : parArr){
+			if (par != null && par.length() != 0){
+				parList.add(par);
+			}
+		}
+		
+		return makeApi(className, methodName, met[1], parList);
 	}
 
 }
