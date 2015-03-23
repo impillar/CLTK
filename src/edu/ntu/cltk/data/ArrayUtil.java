@@ -403,6 +403,12 @@ public class ArrayUtil {
 		return converted;
 	}
 	
+	/**
+	 * Determine if two arrays contain the same elements
+	 * @param arr1
+	 * @param arr2
+	 * @return
+	 */
 	public static <T> boolean overlap(T[] arr1, T[] arr2){
 		for (T a1 : arr1){
 			for (T a2 : arr2){
@@ -413,6 +419,12 @@ public class ArrayUtil {
 		return false;
 	}
 	
+	/**
+	 * Determine if two lists contain the same elements
+	 * @param col1
+	 * @param col2
+	 * @return
+	 */
 	public static <T> boolean overlap(Collection<T> col1, Collection<T> col2){
 		for (T c1 : col1){
 			for (T c2 : col2){
@@ -422,5 +434,53 @@ public class ArrayUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Compare two collections with same type. 
+	 * data1 > data2, 	return 1;
+	 * data1 < data2, 	return -1;
+	 * data1 == data2, 	return 0;
+	 * else				return 2;
+	 * The result will not be influenced by duplicated elements.
+	 * @param data1
+	 * @param data2
+	 * @return
+	 */
+	public static int COLLECTION_LARGER = 1;
+	public static int COLLECTION_SMALLER = -1;
+	public static int COLLECTION_EQUAL = 0;
+	public static int COLLECTION_NOREL = 2;
+	public static <T> int compareCollection(Collection<T> data1, Collection<T> data2){
+		boolean largerOrEqual = true;
+		for (T d2 : data2){
+			boolean found = false;
+			for (T d1 : data1){
+				if (d1.equals(d2)){
+					found = true;
+					break;
+				}
+			}
+			if (found == false)	largerOrEqual = false;
+		}
+		boolean smallerOrEqual = true;
+		for (T d1 : data1){
+			boolean found = false;
+			for (T d2 : data2){
+				if (d1.equals(d2)){
+					found = true;
+					break;
+				}
+			}
+			if (found == false)	smallerOrEqual = false;
+		}
+		if (smallerOrEqual && largerOrEqual){
+			return COLLECTION_EQUAL;
+		}else if (largerOrEqual){
+			return COLLECTION_LARGER;
+		}else if (smallerOrEqual){
+			return COLLECTION_SMALLER;
+		}else
+			return COLLECTION_NOREL;
 	}
 }

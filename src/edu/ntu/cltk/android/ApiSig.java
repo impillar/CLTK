@@ -26,6 +26,22 @@ public class ApiSig implements Comparable<ApiSig> {
 		this.methodName = methodName;
 		
 	}
+	
+	public String getClassName(){
+		return this.className;
+	}
+	
+	public String getMethodName(){
+		return this.methodName;
+	}
+	
+	public String getReturnType(){
+		return this.returnType;
+	}
+	
+	public List<String> getParamters(){
+		return this.parameters;
+	}
 
 	public static ApiSig makeApi(String className, String methodName,
 			String returnType, List<String> parameters) {
@@ -113,7 +129,7 @@ public class ApiSig implements Comparable<ApiSig> {
 				|| met[2].indexOf("(") == -1 
 				|| met[2].charAt(met[2].length()-1)!= '>' 
 				|| met[2].charAt(met[2].length()-2) != ')' 
-				|| met[2].indexOf("(")+1 >= met[2].length()-2){
+				|| met[2].indexOf("(")+1 > met[2].length()-2){
 			throw new Exception("The signature is not following the format: <ClassName: ReturnType MethodName(Parameters)>");
 		}
 		
