@@ -173,6 +173,7 @@ public class FileUtil {
 	
 	/**
 	 * Get the parent directory for one file
+	 * For example, a/b/c/d.txt, will return c
 	 * @param fileName
 	 * @return
 	 */
@@ -182,6 +183,12 @@ public class FileUtil {
 		return fileNode.getParentDirectory();
 	}
 	
+	/**
+	 * Get the canonical parent directory for one file
+	 * For example, a/b/c/d.txt, will return a/b/c
+	 * @param fileName
+	 * @return
+	 */
 	public static String getCanonicalParentDirectory(String fileName){
 		if (fileName == null)	return null;
 		FileUtil.FileNode fileNode = new FileNode(fileName);

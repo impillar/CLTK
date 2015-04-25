@@ -1,6 +1,6 @@
 package edu.ntu.cltk.tester;
 
-import edu.ntu.cltk.android.AndroidApiRecognizer;
+import edu.ntu.cltk.android.AndroidRiskyApiRecognizer;
 
 public class AndroidApiTester {
 
@@ -10,7 +10,7 @@ public class AndroidApiTester {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		AndroidApiRecognizer aar = AndroidApiRecognizer.v();
+		AndroidRiskyApiRecognizer aar = AndroidRiskyApiRecognizer.v();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
@@ -98,5 +100,25 @@ public class CryptoUtil {
 			return ((sum / 10 + 1) * 10 - sum) % 10;
 		}
 		return -1;
+	}
+	
+	/**
+	 * Replace all hexadecimal \xAA to a char
+	 * TODO: use regex to replace all hexadecimal?
+	 * @param str
+	 * @return
+	 */
+	public static String hexToChar(String str){
+		Pattern pat = Pattern.compile("\\\\[x]([0-9a-fA-F]{2})");
+		Matcher mat = pat.matcher(str);
+		StringBuffer sb = new StringBuffer();
+		while (mat.find()){
+			String text = mat.group(1);
+			int i = Integer.valueOf(text, 16);
+			char c = (char) i;
+			mat.appendReplacement(sb, Matcher.quoteReplacement(String.valueOf(c)));
+		}
+		mat.appendTail(sb);
+		return sb.toString();
 	}
 }
