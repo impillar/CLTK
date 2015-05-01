@@ -508,5 +508,4 @@ public class FileUtil {
 		createAllFolder(fileNode.directory);
 		writeFile(filePath, "");
 	}
-
 }

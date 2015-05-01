@@ -8,9 +8,9 @@ import java.util.regex.Pattern;
 
 import edu.ntu.cltk.file.FileUtil;
 
-public class AndroidApiRecognizer {
+public class AndroidRiskyApiRecognizer {
 
-	private static AndroidApiRecognizer aar;
+	private static AndroidRiskyApiRecognizer aar;
 	
 	public static String API_FILE = "data/android-4.1.1.pscout";
 	
@@ -24,7 +24,7 @@ public class AndroidApiRecognizer {
 	private String[] apis;
 	private String[] permissions;
 	
-	private AndroidApiRecognizer(){
+	private AndroidRiskyApiRecognizer(){
 		parse();
 	}
 	
@@ -37,17 +37,17 @@ public class AndroidApiRecognizer {
 		List<String> lines = FileUtil.readFileLineByLine(API_FILE);
 		
 		for (int i = 0 ; i < lines.size(); ){
-			String line = lines.get(i);
+			String line = lines.get(i).trim();
 			if (Pattern.matches(PATTERN_FOR_PERMISSION, line)){
 				String perm = line.replace("Permission:", "").trim();
 				List<ApiSig> callers = new ArrayList<ApiSig>();
 				i++;
 				if (i < lines.size()){
-					line = lines.get(i);
+					line = lines.get(i).trim();
 					if (Pattern.matches(PATTERN_FOR_CALLERS, line)){
 						if (i < lines.size() - 1){
 							i++;
-							line = lines.get(i);
+							line = lines.get(i).trim();
 						}
 					}
 					while (i < lines.size() && Pattern.matches(PATTERN_FOR_API, line)){
@@ -72,10 +72,12 @@ public class AndroidApiRecognizer {
 							apiMap.put(as, perms);
 						}
 						i++;
-						if (i < lines.size())	line = lines.get(i);
+						if (i < lines.size())	line = lines.get(i).trim();
 					}
 				}
-				
+				if (perm.equals("GENERAL")){
+					System.out.println(line);
+				}
 				permMap.put(perm, callers);
 				
 			}else{
@@ -132,9 +134,9 @@ public class AndroidApiRecognizer {
 		return null;
 	}
 	
-	public static synchronized AndroidApiRecognizer v(){
+	public static synchronized AndroidRiskyApiRecognizer v(){
 		if (aar == null){
-			aar = new AndroidApiRecognizer();
+			aar = new AndroidRiskyApiRecognizer();
 		}
 		
 		return aar;

@@ -116,7 +116,7 @@ public class ApiSig implements Comparable<ApiSig> {
 	
 	/**
 	 * The signature should follows:
-	 * <ClassName: ReturnType MethodName(Parameters)>
+	 * &lt;ClassName: ReturnType MethodName(Parameters)&gt;
 	 * @param apiSig
 	 * @return
 	 * @throws Exception 
