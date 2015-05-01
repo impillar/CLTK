@@ -182,6 +182,17 @@ public class FileUtil {
 		return fileNode.getParentDirectory();
 	}
 	
+	/**
+	 * Get the whole directory of current file
+	 * @param fileName
+	 * @return
+	 */
+	public static String getDirectory(String fileName){
+		if (fileName == null) return null;
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		return fileNode.directory;
+	}
+	
 	public static String getCanonicalParentDirectory(String fileName){
 		if (fileName == null)	return null;
 		FileUtil.FileNode fileNode = new FileNode(fileName);
@@ -189,7 +200,8 @@ public class FileUtil {
 	}
 	
 	/**
-	 * Get the name of the file 
+	 * Get the name of the file. For example, a/b/c/d.txt will return d
+	 * If you want to return the name a/b/c/d, please refer to getCanonicalFileName
 	 * @param filename
 	 * @return
 	 */
@@ -197,6 +209,17 @@ public class FileUtil {
 		if (fileName == null)	return null;
 		FileUtil.FileNode fileNode = new FileNode(fileName);
 		return fileNode.fileName;
+	}
+	/**
+	 * Get the name of the file. For example, a/b/c/d.txt will return a/b/c/d
+	 * If you want to return the name d, please refer to getFileName
+	 * @param filename
+	 * @return
+	 */
+	public static String getCanonicalFileName(String fileName){
+		if (fileName == null) return null;
+		FileUtil.FileNode fileNode = new FileNode(fileName);
+		return fileNode.directory+File.separator+fileNode.fileName;
 	}
 	
 	/**
@@ -279,6 +302,10 @@ public class FileUtil {
 			this.osType = osType;
 		}
 		
+		/**
+		 * Get the parent directory of current file, for example, a/b/c/d.txt will return c
+		 * @return
+		 */
 		public String getParentDirectory(){
 			if (directory == null)	return null;
 			int i = directory.length()-1;
