@@ -20,7 +20,7 @@ public class StopWatchTester {
 				System.out.println("Will wait for " + ran + "s");
 				Thread.sleep(ran*1000);
 			}catch(Exception e){
-				System.out.println();
+				
 			}
 
 			StopWatch.v().store();
