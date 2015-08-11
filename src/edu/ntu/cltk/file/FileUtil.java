@@ -248,9 +248,9 @@ public class FileUtil {
 				res.add(line);
 			}
 		} catch (FileNotFoundException e) {
-			return null;
+			return res;
 		} catch (IOException e) {
-			return null;
+			return res;
 		} finally{
 			if (br != null){
 				try {

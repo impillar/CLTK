@@ -337,6 +337,7 @@ public class ManifestManager {
 		return sb.toString();
 	}
 	
+	
 	/*public List<String> filterActivities(IntentModel im){
 		
 		List<String> receptors = new ArrayList<String>();
