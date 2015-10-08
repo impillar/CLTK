@@ -371,6 +371,15 @@ public class FileUtil {
 			return sb.toString();
 		}
 	}
+	
+	public static boolean deleteFileOrFolder(String fileName) throws IOException{
+		File file = new File(fileName);
+		if (file.isDirectory())
+			return deleteDirectory(fileName);
+		else
+			return deleteFile(fileName);
+	}
+	
 	/**
 	 * Delete a file
 	 * @param fileName

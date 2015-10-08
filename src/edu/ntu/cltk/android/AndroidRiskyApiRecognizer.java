@@ -12,7 +12,7 @@ public class AndroidRiskyApiRecognizer {
 
 	private static AndroidRiskyApiRecognizer aar;
 	
-	public static String API_FILE = "data/android-4.1.1.pscout";
+	public static String API_FILE = "data/android-4.1.1.pscout.fulllist";
 	
 	public static final String PATTERN_FOR_PERMISSION = "Permission:.*";
 	public static final String PATTERN_FOR_CALLERS = "[0-9]+\\sCallers:";
