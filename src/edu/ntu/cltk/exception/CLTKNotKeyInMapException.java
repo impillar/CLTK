@@ -7,24 +7,25 @@ import java.util.ResourceBundle;
 
 public class CLTKNotKeyInMapException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1087565421997084797L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1087565421997084797L;
 
-	public CLTKNotKeyInMapException(String string) {
-		super(string);
-	}
+    public CLTKNotKeyInMapException(String string) {
+        super(string);
+    }
 
-	/**
+    /**
      * Constructs a new <code>IllegalArgumentException with specified formatted detail message.
      * Message formatting is delegated to {@link java.text.MessageFormat}.
-     * @param pattern format specifier
+     *
+     * @param pattern   format specifier
      * @param arguments format arguments
      * @return built exception
      */
     public static IllegalArgumentException createIllegalArgumentException(final String pattern,
-                                                                          final Object ... arguments) {
+                                                                          final Object... arguments) {
         return new IllegalArgumentException() {
 
             /** Serializable version identifier. */
@@ -44,22 +45,24 @@ public class CLTKNotKeyInMapException extends Exception {
 
         };
     }
-    
+
     /**
      * Builds a message string by from a pattern and its arguments.
-     * @param locale Locale in which the message should be translated
-     * @param pattern format specifier
+     *
+     * @param locale    Locale in which the message should be translated
+     * @param pattern   format specifier
      * @param arguments format arguments
      * @return a message string
      */
     private static String buildMessage(final Locale locale, final String pattern,
-                                       final Object ... arguments) {
+                                       final Object... arguments) {
         return (pattern == null) ? "" : new MessageFormat(translate(pattern, locale), locale).format(arguments);
     }
-    
+
     /**
      * Translate a string to a given locale.
-     * @param s string to translate
+     *
+     * @param s      string to translate
      * @param locale locale into which to translate the string
      * @return translated string or original string
      * for unsupported locales or unknown strings

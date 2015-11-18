@@ -76,7 +76,10 @@
 }
 
 /* Commented Backslash Hack hides rule from IE5-Mac \*/
-#jobs_menu a span {float:none;}
+#jobs_menu a span {
+    float: none;
+}
+
 /* End IE5-Mac hack */
 
 #jobs_menu a:hover span {
@@ -114,7 +117,7 @@
 #jobs_frame #jobs_frame2 {
     padding-bottom: 7px;
     background: transparent url(../i/about/jobs/bg_bottom_left.png) no-repeat bottom left;
-    
+
 }
 
 #jobs_frame3 {
@@ -160,7 +163,7 @@
 .jobs_featured_main {
     float: left;
     width: 660px;
-    padding-left:10px;
+    padding-left: 10px;
 }
 
 .jobs_featured_sub {
@@ -194,7 +197,7 @@
 .jobs_box {
     width: 678px;
     margin: 0 0 0 10px;
-    padding: 0;    
+    padding: 0;
     background: url(../i/about/jobs/bg_boxtop.png) no-repeat top;
 }
 
@@ -211,7 +214,6 @@
 }
 
 /* NEWS ITEM CONTENT */
-
 
 .jobs_newsitem {
     margin-bottom: 1em;
@@ -335,7 +337,7 @@
     font-size: 14px;
     font-weight: bold;
     color: #353e45;
-    
+
 }
 
 #jobs_videocontent {
@@ -347,7 +349,6 @@
 #jobs_videocontent TD {
     padding-bottom: 0.5em;
 }
-
 
 TD.jobs_video_img {
     vertical-align: top;
@@ -367,6 +368,7 @@ TD.jobs_video_space {
 .jobs_video_desc A {
     text-decoration: none;
 }
+
 /*
 .jobs_video_desc A:hover {
     color: #FF0000;
@@ -387,13 +389,11 @@ TD.jobs_video_space {
     margin-bottom: 10px;
 }
 
-
-
 /* REQUEST FORM */
 
 #jobs_requestform {
     padding: 5px 20px 10px 20px;
-    margin: 0;    
+    margin: 0;
 }
 
 #jobs_requestform DL {

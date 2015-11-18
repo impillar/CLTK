@@ -1,17 +1,6 @@
 package edu.ntu.cltk.android.pm;
 
-import java.io.File;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import android.content.AsyncTaskLoader;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -21,106 +10,136 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.IntentCompat;
 import android.support.v4.content.pm.ActivityInfoCompat;
 
+import java.io.File;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Get the installed application on the device.
  * We get the AppListLoader from Google Sample Project, which can get the application list,
  * which is aware of the change of configuration or installation event
- * @author pillar
  *
+ * @author pillar
  */
 public class PackageMgr {
-	
-	/**
-	 * Get the list of application installed on the device
-	 * @param context
-	 * @return
-	 */
-	public static List<ApplicationInfo> getInstalledApplications(Context context){
-		
-		if (context == null)	return null;
-		
-		PackageManager pm = context.getPackageManager();
-		
-		List<ApplicationInfo> apps = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_DISABLED_COMPONENTS);
-		return apps;
-	}
-	
-	/**
-	 * Get the drawable icon for the application
-	 * @param context
-	 * @param app
-	 * @return
-	 */
-	public static Drawable getDrawableForApp(Context context, String app){
-		
-		if (context == null)	return null;
-		
-		if (app != null){
-		
-			List<ApplicationInfo> apps = getInstalledApplications(context);
-			for (ApplicationInfo ai : apps){
-				if (ai.packageName.equals(app)){
-					
-					File apkFile = new File(ai.sourceDir);
-					if (apkFile.exists()) {
-						return ai.loadIcon(context.getPackageManager());
-					}
-				}
-			}
-		}
-		return context.getResources().getDrawable(
+
+    /**
+     * Perform alphabetical comparison of application entry objects.
+     */
+    public static final Comparator<AppEntry> ALPHA_COMPARATOR = new Comparator<AppEntry>() {
+        private final Collator sCollator = Collator.getInstance();
+
+        @Override
+        public int compare(AppEntry object1, AppEntry object2) {
+            return sCollator.compare(object1.getLabel(), object2.getLabel());
+        }
+    };
+
+    /**
+     * Get the list of application installed on the device
+     *
+     * @param context
+     * @return
+     */
+    public static List<ApplicationInfo> getInstalledApplications(Context context) {
+
+        if (context == null) return null;
+
+        PackageManager pm = context.getPackageManager();
+
+        List<ApplicationInfo> apps = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_DISABLED_COMPONENTS);
+        return apps;
+    }
+
+    /**
+     * Get the drawable icon for the application
+     *
+     * @param context
+     * @param app
+     * @return
+     */
+    public static Drawable getDrawableForApp(Context context, String app) {
+
+        if (context == null) return null;
+
+        if (app != null) {
+
+            List<ApplicationInfo> apps = getInstalledApplications(context);
+            for (ApplicationInfo ai : apps) {
+                if (ai.packageName.equals(app)) {
+
+                    File apkFile = new File(ai.sourceDir);
+                    if (apkFile.exists()) {
+                        return ai.loadIcon(context.getPackageManager());
+                    }
+                }
+            }
+        }
+        return context.getResources().getDrawable(
                 android.R.drawable.sym_def_app_icon);
-	}
-	
-	/**
-	 * Get the drawable icon for a specific application
-	 * @param context
-	 * @param ai
-	 * @return
-	 */
-	public static Drawable getDrawableForApp(Context context, ApplicationInfo ai){
-		if (ai!=null && context != null){
-			File apkFile = new File(ai.sourceDir);
-			if (apkFile.exists()){
-				return ai.loadIcon(context.getPackageManager());
-			}
-		}
-		return context==null?null:context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
-	}
-	
-	/**
-	 * Get the ApplicationInfo for one provided package name
-	 * @param context
-	 * @param app
-	 * @return
-	 */
-	public static ApplicationInfo searchApplicationInfo(Context context, String app){
-		if (context == null)	return null;
-		for (ApplicationInfo ai : getInstalledApplications(context)){
-			if (ai.packageName.equals(app)){
-				return ai;
-			}
-		}
-		return null;		
-	}
-	
-	public static Drawable getDrawableForApp(Context context, List<ApplicationInfo> apps, String app){
-		for (ApplicationInfo ai : apps){
-			if (ai.packageName.equals(app)){
-				File apkFile = new File(ai.sourceDir);
-				if (apkFile.exists()){
-					return ai.loadIcon(context.getPackageManager());
-				}
-			}
-		}
-		
-		return context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
-	}
-	
-	/**
+    }
+
+    /**
+     * Get the drawable icon for a specific application
+     *
+     * @param context
+     * @param ai
+     * @return
+     */
+    public static Drawable getDrawableForApp(Context context, ApplicationInfo ai) {
+        if (ai != null && context != null) {
+            File apkFile = new File(ai.sourceDir);
+            if (apkFile.exists()) {
+                return ai.loadIcon(context.getPackageManager());
+            }
+        }
+        return context == null ? null : context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+    }
+
+    /**
+     * Get the ApplicationInfo for one provided package name
+     *
+     * @param context
+     * @param app
+     * @return
+     */
+    public static ApplicationInfo searchApplicationInfo(Context context, String app) {
+        if (context == null) return null;
+        for (ApplicationInfo ai : getInstalledApplications(context)) {
+            if (ai.packageName.equals(app)) {
+                return ai;
+            }
+        }
+        return null;
+    }
+
+    public static Drawable getDrawableForApp(Context context, List<ApplicationInfo> apps, String app) {
+        for (ApplicationInfo ai : apps) {
+            if (ai.packageName.equals(app)) {
+                File apkFile = new File(ai.sourceDir);
+                if (apkFile.exists()) {
+                    return ai.loadIcon(context.getPackageManager());
+                }
+            }
+        }
+
+        return context.getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+    }
+
+    /**
      * This class holds the per-item data in our Loader.
      */
     public static class AppEntry {
+        private final AppListLoader mLoader;
+        private final ApplicationInfo mInfo;
+        private final File mApkFile;
+        private String mLabel;
+        private Drawable mIcon;
+        private boolean mMounted;
+
         public AppEntry(AppListLoader loader, ApplicationInfo info) {
             mLoader = loader;
             mInfo = info;
@@ -159,7 +178,8 @@ public class PackageMgr {
                     android.R.drawable.sym_def_app_icon);
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return mLabel;
         }
 
@@ -175,14 +195,8 @@ public class PackageMgr {
                 }
             }
         }
-
-        private final AppListLoader mLoader;
-        private final ApplicationInfo mInfo;
-        private final File mApkFile;
-        private String mLabel;
-        private Drawable mIcon;
-        private boolean mMounted;
     }
+
     /**
      * Helper for determining if the configuration has changed in an interesting
      * way so we need to rebuild the app list.
@@ -194,8 +208,8 @@ public class PackageMgr {
         boolean applyNewConfig(Resources res) {
             int configChanges = mLastConfiguration.updateFrom(res.getConfiguration());
             boolean densityChanged = mLastDensity != res.getDisplayMetrics().densityDpi;
-            if (densityChanged || (configChanges&(ActivityInfo.CONFIG_LOCALE
-                    |ActivityInfoCompat.CONFIG_UI_MODE|ActivityInfo.CONFIG_SCREEN_LAYOUT)) != 0) {
+            if (densityChanged || (configChanges & (ActivityInfo.CONFIG_LOCALE
+                    | ActivityInfoCompat.CONFIG_UI_MODE | ActivityInfo.CONFIG_SCREEN_LAYOUT)) != 0) {
                 mLastDensity = res.getDisplayMetrics().densityDpi;
                 return true;
             }
@@ -224,11 +238,13 @@ public class PackageMgr {
             mLoader.getContext().registerReceiver(this, sdFilter);
         }
 
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             // Tell the loader about the change.
             mLoader.onContentChanged();
         }
     }
+
     /**
      * A custom Loader that loads all of the installed applications.
      */
@@ -253,11 +269,12 @@ public class PackageMgr {
          * called in a background thread and should generate a new set of
          * data to be published by the loader.
          */
-        @Override public List<AppEntry> loadInBackground() {
+        @Override
+        public List<AppEntry> loadInBackground() {
             // Retrieve all known applications.
             List<ApplicationInfo> apps = mPm.getInstalledApplications(
                     PackageManager.GET_UNINSTALLED_PACKAGES |
-                    PackageManager.GET_DISABLED_COMPONENTS);
+                            PackageManager.GET_DISABLED_COMPONENTS);
             if (apps == null) {
                 apps = new ArrayList<ApplicationInfo>();
             }
@@ -266,7 +283,7 @@ public class PackageMgr {
 
             // Create corresponding array of entries and load their labels.
             List<AppEntry> entries = new ArrayList<AppEntry>(apps.size());
-            for (int i=0; i<apps.size(); i++) {
+            for (int i = 0; i < apps.size(); i++) {
                 AppEntry entry = new AppEntry(this, apps.get(i));
                 entry.loadLabel(context);
                 entries.add(entry);
@@ -284,7 +301,8 @@ public class PackageMgr {
          * super class will take care of delivering it; the implementation
          * here just adds a little more logic.
          */
-        @Override public void deliverResult(List<AppEntry> apps) {
+        @Override
+        public void deliverResult(List<AppEntry> apps) {
             if (isReset()) {
                 // An async query came in while the loader is stopped.  We
                 // don't need the result.
@@ -312,7 +330,8 @@ public class PackageMgr {
         /**
          * Handles a request to start the Loader.
          */
-        @Override protected void onStartLoading() {
+        @Override
+        protected void onStartLoading() {
             if (mApps != null) {
                 // If we currently have a result available, deliver it
                 // immediately.
@@ -338,7 +357,8 @@ public class PackageMgr {
         /**
          * Handles a request to stop the Loader.
          */
-        @Override protected void onStopLoading() {
+        @Override
+        protected void onStopLoading() {
             // Attempt to cancel the current load task if possible.
             cancelLoad();
         }
@@ -346,7 +366,8 @@ public class PackageMgr {
         /**
          * Handles a request to cancel a load.
          */
-        @Override public void onCanceled(List<AppEntry> apps) {
+        @Override
+        public void onCanceled(List<AppEntry> apps) {
             super.onCanceled(apps);
 
             // At this point we can release the resources associated with 'apps'
@@ -357,7 +378,8 @@ public class PackageMgr {
         /**
          * Handles a request to completely reset the Loader.
          */
-        @Override protected void onReset() {
+        @Override
+        protected void onReset() {
             super.onReset();
 
             // Ensure the loader is stopped
@@ -386,15 +408,4 @@ public class PackageMgr {
             // like a Cursor, we would close it here.
         }
     }
-    
-    /**
-     * Perform alphabetical comparison of application entry objects.
-     */
-    public static final Comparator<AppEntry> ALPHA_COMPARATOR = new Comparator<AppEntry>() {
-        private final Collator sCollator = Collator.getInstance();
-        @Override
-        public int compare(AppEntry object1, AppEntry object2) {
-            return sCollator.compare(object1.getLabel(), object2.getLabel());
-        }
-    };
 }

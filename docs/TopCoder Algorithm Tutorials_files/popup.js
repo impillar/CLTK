@@ -1,13 +1,13 @@
 var objPopUp = null;
 // called when you popup at the bottom right of an object
-function popUp(popper,popupID) {
+function popUp(popper, popupID) {
     var pos = findPos(popper);
     var x = pos[0] + popper.offsetWidth + 2;
     var y = pos[1] + popper.offsetHeight + 2;
-    popShow(x,y,popupID);
+    popShow(x, y, popupID);
 }
 // called when you know the exact spot you want to pop up at
-function popShow(posX,posY,popupID) {
+function popShow(posX, posY, popupID) {
     objPopUp = document.getElementById(popupID);
     objPopUp.style.left = posX + 'px';
     objPopUp.style.top = posY + 'px';
@@ -27,8 +27,8 @@ function findPos(obj) {
             curTop += obj.offsetTop;
         }
     }
-    return [curLeft,curTop];
+    return [curLeft, curTop];
 }
-function postPopUpText(popupTextID,myText) {
+function postPopUpText(popupTextID, myText) {
     document.getElementById(popupTextID).innerHTML = myText;
 }

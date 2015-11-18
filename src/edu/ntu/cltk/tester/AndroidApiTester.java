@@ -4,13 +4,13 @@ import edu.ntu.cltk.android.AndroidRiskyApiRecognizer;
 
 public class AndroidApiTester {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
 
-		AndroidRiskyApiRecognizer aar = AndroidRiskyApiRecognizer.v();
-	}
+        AndroidRiskyApiRecognizer aar = AndroidRiskyApiRecognizer.v();
+    }
 
 }
