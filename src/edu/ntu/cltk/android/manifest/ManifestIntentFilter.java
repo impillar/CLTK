@@ -3,6 +3,7 @@ package edu.ntu.cltk.android.manifest;
 
 import org.dom4j.Element;
 
+@SuppressWarnings("unused")
 public class ManifestIntentFilter extends ManifestElement {
 
     public final static String TAG = "intent-filter";

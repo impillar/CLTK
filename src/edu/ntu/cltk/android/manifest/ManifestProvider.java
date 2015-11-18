@@ -3,6 +3,7 @@ package edu.ntu.cltk.android.manifest;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ManifestProvider extends ManifestElement {
 
     public final static String TAG = "provider";
