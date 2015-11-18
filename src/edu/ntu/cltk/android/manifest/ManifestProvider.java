@@ -7,10 +7,13 @@ public class ManifestProvider extends ManifestElement {
 
     public final static String TAG = "provider";
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
-    private String name = "provider";
     private String grantUriPermission;
     private String metaData;
     private String pathPermission;
+
+    protected ManifestProvider(String providerName) {
+        super(providerName);
+    }
 
     public String getGrantUriPermission() {
         return grantUriPermission;
@@ -36,21 +39,9 @@ public class ManifestProvider extends ManifestElement {
         this.pathPermission = pathPermission;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public void addIntentFilter(ManifestIntentFilter intentFilter) {
         this.intentFilters.add(intentFilter);
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
 }

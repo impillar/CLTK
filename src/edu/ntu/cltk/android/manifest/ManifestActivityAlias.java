@@ -4,16 +4,9 @@ public class ManifestActivityAlias extends ManifestActivity {
 
     public final static String TAG = "activity-alias";
 
-    private final String name = "activity-alias";
-
-    @Override
-    public String getName() {
-        return name;
+    public ManifestActivityAlias(String targetActivityName) {
+        super(targetActivityName);
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 
 }

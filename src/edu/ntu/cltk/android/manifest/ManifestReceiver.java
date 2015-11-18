@@ -7,31 +7,16 @@ public class ManifestReceiver extends ManifestElement {
 
     public final static String TAG = "receiver";
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
-    private String name = "receiver";
 
-    @Override
-    public String getName() {
-        return name;
+    protected ManifestReceiver(String receiverName) {
+        super(receiverName);
     }
 
-    /**
-     * We need to change the format of class from a.b.c.d to a/b/c/d
-     * Because the value from soot is under this format
-     *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name.replace('.', '/');
-    }
 
     public void addIntentFilter(ManifestIntentFilter intentFilter) {
         this.intentFilters.add(intentFilter);
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
 
     public boolean containsAction(String action) {
         for (ManifestIntentFilter filter : intentFilters) {

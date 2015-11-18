@@ -8,31 +8,15 @@ public class ManifestService extends ManifestElement {
     public final static String TAG = "service";
 
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
-    private String name = "service";
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * We need to change the format of class from a.b.c.d to a/b/c/d
-     * Because the value from soot is under this format
-     *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name.replace('.', '/');
+    protected ManifestService(String serviceName) {
+        super(serviceName);
     }
 
     public void addIntentFilter(ManifestIntentFilter intentFilter) {
         this.intentFilters.add(intentFilter);
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
 
     public boolean containsAction(String action) {
         for (ManifestIntentFilter filter : intentFilters) {

@@ -9,7 +9,6 @@ public class ManifestApplication extends ManifestElement {
 
     public final static String TAG = "application";
 
-    private String name;
     private List<ManifestActivity> activities = new ArrayList<ManifestActivity>();
     private List<ManifestActivityAlias> alias = new ArrayList<ManifestActivityAlias>();
     private List<ManifestService> services = new ArrayList<ManifestService>();
@@ -18,21 +17,13 @@ public class ManifestApplication extends ManifestElement {
     private List<ManifestLibrary> libraries = new ArrayList<ManifestLibrary>();
 
     public ManifestApplication() {
-        this.name = "";
-    }
-
-    public ManifestApplication(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(TAG);
     }
 
     public void setName(String name) {
         this.name = name;
     }
+
 
     public List<ManifestActivity> getActivities() {
         return activities;
@@ -106,7 +97,7 @@ public class ManifestApplication extends ManifestElement {
         this.libraries.add(library);
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString")
+    @SuppressWarnings({"StringBufferReplaceableByString", "StringConcatenationInsideStringBufferAppend"})
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

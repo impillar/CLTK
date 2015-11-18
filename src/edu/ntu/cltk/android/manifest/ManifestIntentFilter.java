@@ -1,32 +1,29 @@
 package edu.ntu.cltk.android.manifest;
 
 
+import org.dom4j.Element;
+
 public class ManifestIntentFilter extends ManifestElement {
 
     public final static String TAG = "intent-filter";
 
-    private final String name = "intent-filter";
     protected String action;
     protected String category;
     protected String data;
 
-    /**
-     * Initialize a ManifestIntentFilter object with action, category and data
-     *
-     * @param action
-     * @param category
-     * @param data
-     */
     public ManifestIntentFilter(String action, String category, String data) {
+        super(TAG);
         this.action = action;
         this.category = category;
         this.data = data;
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public ManifestIntentFilter(Element intentFilter) {
+        this.action = intentFilter.elementText("action");
+        this.category = intentFilter.elementText("category");
+        this.data = intentFilter.elementText("data");
     }
+
 
     public String getAction() {
         return action;
@@ -54,28 +51,31 @@ public class ManifestIntentFilter extends ManifestElement {
 
     @Override
     public boolean equals(Object obj) {
+        if (!(obj instanceof ManifestIntentFilter)) {
+            return false;
+        }
         ManifestIntentFilter mif = (ManifestIntentFilter) obj;
         if (action == null) {
-            if (mif.getAction() != null)
+            if (mif.action != null)
                 return false;
         } else {
-            if (mif.getAction() == null || !mif.getAction().equals(action))
+            if (mif.action == null || !mif.action.equals(action))
                 return false;
         }
 
         if (category == null) {
-            if (mif.getCategory() != null)
+            if (mif.category != null)
                 return false;
         } else {
-            if (mif.getCategory() == null || !mif.getCategory().equals(category))
+            if (mif.category == null || !mif.category.equals(category))
                 return false;
         }
 
         if (data == null) {
-            if (mif.getData() != null)
+            if (mif.data != null)
                 return false;
         } else {
-            if (mif.getData() == null || !mif.getData().equals(data))
+            if (mif.data == null || !mif.data.equals(data))
                 return false;
         }
         return true;

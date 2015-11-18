@@ -24,10 +24,10 @@ import java.util.zip.ZipFile;
  * - Activity
  * - ...
  * Data Structure:
- * <p>
+ * <p/>
  * ManifestManager
  * - manifestFile:  the location of manifest file
- * - ma: Manifest application
+ * - application: Manifest application
  * -- List of permissions
  * -- List of activities
  * -- List of services
@@ -35,11 +35,11 @@ import java.util.zip.ZipFile;
  *
  * @author pillar
  */
+@SuppressWarnings("unused")
 public class ManifestManager {
 
     private String manifestFile;
-    private InputStream is;
-    private ManifestApplication ma;
+    private ManifestApplication application;
     private List<ManifestPermission> permissions = new ArrayList<ManifestPermission>();
     private List<ManifestUsesPermission> usesPermissions = new ArrayList<ManifestUsesPermission>();
     private List<ManifestUsesFeature> usesFeatures = new ArrayList<ManifestUsesFeature>();
@@ -47,16 +47,27 @@ public class ManifestManager {
     private String versionCode;
     private String versionName;
 
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            throw new RuntimeException("Please run with AndroidManifest.xml as the 1st arg");
+
+        }
+        String fpath = args[0];
+        try {
+            ManifestManager mgr = new ManifestManager(fpath);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(String.format("File %s does not exist\n", fpath));
+
+        }
+    }
+
     public ManifestManager(final String filePath) throws FileNotFoundException {
+        this(new FileInputStream(filePath));
         this.manifestFile = filePath;
-        this.ma = new ManifestApplication();
-        this.is = new FileInputStream(manifestFile);
-        parse(is);
     }
 
     public ManifestManager(final InputStream is) {
-        this.is = is;
-        this.ma = new ManifestApplication();
+        this.application = new ManifestApplication();
         parse(is);
     }
 
@@ -64,15 +75,16 @@ public class ManifestManager {
 
         File apkF = new File(apkFile);
 
-        if (!apkF.exists())
-            throw new RuntimeException("file '" + apkFile + "' does not exist!");
+        if (!apkF.exists()) {
+            throw new RuntimeException(String.format("apk File %s does not exist\n", apkFile));
+        }
 
         // get AndroidManifest
         InputStream manifestIS = null;
         ZipFile archive = null;
         try {
             archive = new ZipFile(apkF);
-            for (@SuppressWarnings("rawtypes") Enumeration entries = archive.entries(); entries.hasMoreElements(); ) {
+            for (Enumeration entries = archive.entries(); entries.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String entryName = entry.getName();
                 // We are dealing with the Android manifest
@@ -88,52 +100,44 @@ public class ManifestManager {
                 try {
                     archive.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("Error when looking for manifest in apk: " + e);
+                    System.err.println("Error when looking for manifest in apk: " + e);
+                    System.exit(1);
                 }
         }
 
         return manifestIS;
     }
 
+    /**
+     * @return manifest file name if exists; otherwise null
+     */
     public String getManifestFile() {
         return manifestFile;
     }
 
-    public void setManifestFile(String manifestFile) {
-        this.manifestFile = manifestFile;
+
+    public ManifestApplication getApplication() {
+        return application;
     }
 
-    public ManifestApplication getMa() {
-        return ma;
-    }
-
-    public void setMa(ManifestApplication ma) {
-        this.ma = ma;
+    public void setApplication(ManifestApplication application) {
+        this.application = application;
     }
 
     public List<ManifestPermission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<ManifestPermission> permissions) {
-        this.permissions = permissions;
-    }
 
     public List<ManifestUsesPermission> getUsesPermissions() {
         return usesPermissions;
     }
 
-    public void setUsesPermissions(List<ManifestUsesPermission> usesPermissions) {
-        this.usesPermissions = usesPermissions;
-    }
 
     public List<ManifestUsesFeature> getUsesFeatures() {
         return usesFeatures;
     }
 
-    public void setUsesFeatures(List<ManifestUsesFeature> usesFeatures) {
-        this.usesFeatures = usesFeatures;
-    }
 
     public String getPackageName() {
         return packageName;
@@ -176,21 +180,13 @@ public class ManifestManager {
                     this.permissions.add(new ManifestPermission(e.attributeValue("name")));
                 } else if (e.getName().equals(ManifestApplication.TAG)) {
 
-                    String appName = e.attributeValue("name");
-                    if (appName != null && appName.startsWith(".") && this.packageName != null) {
-                        appName = this.packageName + appName;
-                    }
-                    ma.setName(appName);
+                    String appName = Utility.getQName(this.packageName, e.attributeValue("name"));
+                    application.setName(appName);
 
                     for (Iterator appIter = e.elementIterator(ManifestActivity.TAG); appIter.hasNext(); ) {
                         Element act = (Element) appIter.next();
-                        ManifestActivity mActivity = new ManifestActivity();
-                        String actName = act.attributeValue("name");
-                        //Change it to the full-qualified name
-                        if (actName != null && actName.startsWith(".") && this.packageName != null) {
-                            actName = this.packageName + actName;
-                        }
-                        mActivity.setName(actName);
+                        String actName = Utility.getQName(this.packageName, act.attributeValue("name"));
+                        ManifestActivity mActivity = new ManifestActivity(actName);
 
                         for (Iterator inIter = act.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
                             Element filter = (Element) inIter.next();
@@ -202,61 +198,40 @@ public class ManifestManager {
 
                         }
 
-                        ma.addActivity(mActivity);
+                        application.addActivity(mActivity);
                     }
                     for (Iterator appIter = e.elementIterator(ManifestActivityAlias.TAG); appIter.hasNext(); ) {
                         Element act = (Element) appIter.next();
-                        ManifestActivityAlias mActivity = new ManifestActivityAlias();
-                        String actName = act.attributeValue("name");
-                        //Change it to the full-qualified name
-                        if (actName != null && actName.startsWith(".") && this.packageName != null) {
-                            actName = this.packageName + actName;
-                        }
-                        mActivity.setName(actName);
+//                        FIXME may be wrong
+                        String actName = Utility.getQName(this.packageName, act.attributeValue("name"));
+                        ManifestActivityAlias mActivity = new ManifestActivityAlias(actName);
 
                         for (Iterator inIter = act.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
                             Element filter = (Element) inIter.next();
-                            String action = filter.elementText("action");
-                            String category = filter.elementText("category");
-                            String data = filter.elementText("data");
-
-                            mActivity.addIntentFilter(new ManifestIntentFilter(action, category, data));
-
+                            ManifestIntentFilter mif = new ManifestIntentFilter(filter);
+                            mActivity.addIntentFilter(mif);
                         }
 
-                        ma.addActivity(mActivity);
+                        application.addActivity(mActivity);
                     }
                     for (Iterator appIter = e.elementIterator(ManifestService.TAG); appIter.hasNext(); ) {
                         Element service = (Element) appIter.next();
-                        ManifestService mService = new ManifestService();
-                        String serviceName = service.attributeValue("name");
-                        //Change it to the full-qualified name
-                        if (serviceName != null && serviceName.startsWith(".") && this.packageName != null) {
-                            serviceName = this.packageName + serviceName;
-                        }
-                        mService.setName(serviceName);
+                        String serviceName = Utility.getQName(this.packageName, service.attributeValue("name"));
+                        ManifestService mService = new ManifestService(serviceName);
 
                         for (Iterator inIter = service.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
-                            Element filter = (Element) inIter.next();
-                            String action = filter.elementText("action");
-                            String category = filter.elementText("category");
-                            String data = filter.elementText("data");
-
-                            mService.addIntentFilter(new ManifestIntentFilter(action, category, data));
+                            Element ifElement = (Element) inIter.next();
+                            ManifestIntentFilter intentFilter = new ManifestIntentFilter(ifElement);
+                            mService.addIntentFilter(intentFilter);
                         }
 
-                        ma.addService(mService);
+                        application.addService(mService);
                     }
                     for (Iterator appIter = e.elementIterator(ManifestProvider.TAG); appIter.hasNext(); ) {
 
                         Element provider = (Element) appIter.next();
-                        ManifestProvider mProvider = new ManifestProvider();
-                        String providerName = provider.attributeValue("name");
-                        //Change it to the full=qualified name
-                        if (providerName != null && providerName.startsWith(".") && this.packageName != null) {
-                            providerName = this.packageName + providerName;
-                        }
-                        mProvider.setName(providerName);
+                        String providerName = Utility.getQName(this.packageName, provider.attributeValue("name"));
+                        ManifestProvider mProvider = new ManifestProvider(providerName);
 
                         String grantUriPermission = provider.elementText("grant-uri-permission");
                         String metaData = provider.elementText("meta-data");
@@ -266,35 +241,27 @@ public class ManifestManager {
                         mProvider.setMetaData(metaData);
                         mProvider.setPathPermission(pathPermission);
 
-                        ma.addProvider(mProvider);
+                        application.addProvider(mProvider);
 
                     }
                     for (Iterator appIter = e.elementIterator(ManifestReceiver.TAG); appIter.hasNext(); ) {
 
                         Element receiver = (Element) appIter.next();
-                        ManifestReceiver mReceiver = new ManifestReceiver();
-                        String receiverName = receiver.attributeValue("name");
-                        //Change it to the full-qualified name
-                        if (receiverName != null && receiverName.startsWith(".") && this.packageName != null) {
-                            receiverName = this.packageName + receiverName;
-                        }
-                        mReceiver.setName(receiverName);
+                        String receiverName = Utility.getQName(this.packageName, receiver.attributeValue("name"));
+                        ManifestReceiver mReceiver = new ManifestReceiver(receiverName);
 
                         for (Iterator inIter = receiver.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
                             Element filter = (Element) inIter.next();
-                            String action = filter.elementText("action");
-                            String category = filter.elementText("category");
-                            String data = filter.elementText("data");
-
-                            mReceiver.addIntentFilter(new ManifestIntentFilter(action, category, data));
+                            ManifestIntentFilter intentFilter = new ManifestIntentFilter(filter);
+                            mReceiver.addIntentFilter(intentFilter);
                         }
 
-                        ma.addReceiver(mReceiver);
+                        application.addReceiver(mReceiver);
                     }
 
                     for (Iterator fetIter = e.elementIterator(ManifestLibrary.TAG); fetIter.hasNext(); ) {
                         Element feature = (Element) fetIter.next();
-                        ma.addLibrary(new ManifestLibrary(feature.attributeValue("name")));
+                        application.addLibrary(new ManifestLibrary(feature.attributeValue("name")));
                     }
                 } else if (e.getName().equals(ManifestUsesFeature.TAG)) {
                     this.usesFeatures.add(new ManifestUsesFeature(e.attributeValue("name")));
@@ -308,53 +275,13 @@ public class ManifestManager {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("package: " + this.packageName + "\n");
-        sb.append("version: " + this.versionCode + "\n");
-        sb.append("uses-permission: " + ArrayUtil.serializeArray(usesPermissions, ", ") + "\n");
-        sb.append("permission: " + ArrayUtil.serializeArray(permissions, ", ") + "\n");
-        sb.append("uses-feature: " + ArrayUtil.serializeArray(usesFeatures, ", ") + "\n");
-        sb.append("application: " + ma.toString() + "\n");
-        return sb.toString();
+        String s = "package: " + this.packageName + "\n" +
+                "version: " + this.versionCode + "\n" +
+                "uses-permission: " + ArrayUtil.serializeArray(usesPermissions, ", ") + "\n" +
+                "permission: " + ArrayUtil.serializeArray(permissions, ", ") + "\n" +
+                "uses-feature: " + ArrayUtil.serializeArray(usesFeatures, ", ") + "\n" +
+                "application: " + application.toString() + "\n";
+        return s;
     }
 
-	
-	/*public List<String> filterActivities(IntentModel im){
-		
-		List<String> receptors = new ArrayList<String>();
-		
-		List<ManifestActivity> activities = this.getMa().getActivities();
-		for (ManifestActivity activity : activities){
-			if (im.getClazz().contains(activity.getName()) || ArrayUtil.overlap(im.getActions(), activity.getAllActions())){
-				receptors.add(activity.getName());
-			}
-		}
-		return receptors;
-	}
-	
-	public List<String> filterServices(IntentModel im){
-
-		List<String> receptors = new ArrayList<String>();
-		
-		List<ManifestService> services = this.getMa().getServices();
-		for (ManifestService service : services){
-			if (im.getClazz().contains(service.getName()) || ArrayUtil.overlap(im.getActions(), service.getAllActions())){
-				receptors.add(service.getName());
-			}
-		}
-		return receptors;
-	}
-	
-	public List<String> filterReceiver(IntentModel im){
-
-		List<String> receptors = new ArrayList<String>();
-		
-		List<ManifestReceiver> receivers = this.getMa().getReceivers();
-		for (ManifestReceiver receiver : receivers){
-			if (im.getClazz().contains(receiver.getName()) || ArrayUtil.overlap(im.getActions(), receiver.getAllActions())){
-				receptors.add(receiver.getName());
-			}
-		}
-		return receptors;
-	}*/
 }
