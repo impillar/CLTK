@@ -2,12 +2,11 @@ package edu.ntu.cltk.android.manifest;
 
 import org.dom4j.Element;
 
-@SuppressWarnings("unused")
 public class ManifestUsesPermission extends ManifestElement {
 
     public final static String TAG = "uses-permission";
 
-    //    TODO parse to value
+    //  TODO parse to value
     private String maxSdkVersion;
     private String name;
 
@@ -22,7 +21,7 @@ public class ManifestUsesPermission extends ManifestElement {
     public String getMaxSdkVersion() {
         return maxSdkVersion;
     }
-    
+
     public String getName() {
         return name;
     }

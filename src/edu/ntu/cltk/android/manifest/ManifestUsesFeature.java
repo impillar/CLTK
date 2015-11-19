@@ -7,7 +7,7 @@ public class ManifestUsesFeature extends ManifestElement {
     public final static String TAG = "uses-feature";
 
     private String name;
-    //    TODO determine to be true/false
+    //  TODO determine to be true/false
     private String required;
     private String glEsVersion;
 
@@ -17,7 +17,7 @@ public class ManifestUsesFeature extends ManifestElement {
         required = element.attributeValue("android:required");
         required = element.attributeValue("android:glEsVersion");
     }
-    
+
     public String getName() {
         return name;
     }

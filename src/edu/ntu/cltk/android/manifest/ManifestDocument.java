@@ -15,24 +15,8 @@ import java.util.List;
 
 
 /**
- * It's a diligent class, which will parse the manifest file immediately after knowing its path.
- * <p/>
- * Usage:
- * - Create a new object of ManifestDocument
- * - Get the elements in the Mannifest file
- * - Permission
- * - Activity
- * - ...
- * <p/>
- * Data Structure:
- * - filePath:  the location of manifest file
- * - application: Manifest application
- * -- List of permissions
- * -- List of activities
- * -- List of services
- * -- ...
+ * http://developer.android.com/guide/topics/manifest/manifest-element.html
  */
-@SuppressWarnings("unused")
 public class ManifestDocument {
 
     private String filePath;
@@ -56,8 +40,8 @@ public class ManifestDocument {
             Document document = reader.read(is);
             Element root = document.getRootElement();
             this.packageName = root.attributeValue("package");
-            this.versionCode = root.attributeValue("versionCode");
-            this.versionName = root.attributeValue("versionName");
+            this.versionCode = root.attributeValue("android:versionCode");
+            this.versionName = root.attributeValue("android:versionName");
 
             for (Iterator iter = root.elementIterator(); iter.hasNext(); ) {
                 Element e = (Element) iter.next();
@@ -68,8 +52,8 @@ public class ManifestDocument {
                     ManifestPermission mp = new ManifestPermission(e);
                     this.permissions.add(mp);
                 } else if (e.getName().equals(ManifestApplication.TAG)) {
-//                    only 1 application per document
-                    this.application = new ManifestApplication(e, this.packageName);
+                    //  only 1 application per document
+                    this.application = new ManifestApplication(e, this);
                 } else if (e.getName().equals(ManifestUsesFeature.TAG)) {
                     ManifestUsesFeature muf = new ManifestUsesFeature(e);
                     this.usesFeatures.add(muf);
@@ -92,47 +76,28 @@ public class ManifestDocument {
         return application;
     }
 
-    public void setApplication(ManifestApplication application) {
-        this.application = application;
-    }
-
     public List<ManifestPermission> getPermissions() {
         return permissions;
     }
-
 
     public List<ManifestUsesPermission> getUsesPermissions() {
         return usesPermissions;
     }
 
-
     public List<ManifestUsesFeature> getUsesFeatures() {
         return usesFeatures;
     }
 
-
     public String getPackageName() {
         return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 
     public String getVersionCode() {
         return versionCode;
     }
 
-    public void setVersionCode(String versionCode) {
-        this.versionCode = versionCode;
-    }
-
     public String getVersionName() {
         return versionName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
     }
 
     @Override

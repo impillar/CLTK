@@ -12,7 +12,7 @@ public class ManifestApplication extends ManifestElement {
 
     private ManifestDocument parent;
 
-    private String backupAgent; // no default
+    private String backupAgent;  //  no default
     private String manageSpaceActivity;
     private String name;
     private String permission;
@@ -29,7 +29,7 @@ public class ManifestApplication extends ManifestElement {
     private boolean killAfterRestore;
     private boolean largeHeap;
     private boolean persistent;
-    private boolean restoreAnyVersion; // default to false
+    private boolean restoreAnyVersion;  //  default to false
     private boolean supportsRtl;
     private boolean testOnly;
     private boolean usesCleartextTraffic;
@@ -37,7 +37,6 @@ public class ManifestApplication extends ManifestElement {
 
 
     private List<ManifestActivity> activities = new ArrayList<ManifestActivity>();
-    private List<ManifestActivityAlias> alias = new ArrayList<ManifestActivityAlias>();
     private List<ManifestService> services = new ArrayList<ManifestService>();
     private List<ManifestReceiver> receivers = new ArrayList<ManifestReceiver>();
     private List<ManifestProvider> providers = new ArrayList<ManifestProvider>();
@@ -46,7 +45,6 @@ public class ManifestApplication extends ManifestElement {
 
     public ManifestApplication(Element e, ManifestDocument parent) {
         this.parent = parent;
-        String packageName = parent.getPackageName();
 
         backupAgent = e.attributeValue("android:backupAgent");
         manageSpaceActivity = e.attributeValue("android:manageSpaceActivity");
@@ -62,19 +60,21 @@ public class ManifestApplication extends ManifestElement {
         debuggable = e.attributeValue("android:debuggable", "false").equalsIgnoreCase("true");
         enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
         hasCode = e.attributeValue("android:hasCode").equalsIgnoreCase("true");
-//  FIXME: incorrect here since related to sdk version
+        //  FIXME: incorrect here since related to sdk version
         hardwareAccelerated = e.attributeValue("android:hardwareAccelerated").equalsIgnoreCase("true");
         killAfterRestore = e.attributeValue("android:killAfterRestore", "true").equalsIgnoreCase("true");
-//        FIXME; may be null
+        //  FIXME; may be null
         largeHeap = e.attributeValue("android:largeHeap").equalsIgnoreCase("true");
         persistent = e.attributeValue("android:persistent", "false").equalsIgnoreCase("true");
         restoreAnyVersion = e.attributeValue("android:restoreAnyVersion", "false").equalsIgnoreCase("true");
-//        TODO ensure correctness
+        //  TODO ensure correctness
         supportsRtl = e.attributeValue("android:supportsRtl", "false").equalsIgnoreCase("true");
-//        TODO
+        //  TODO
         testOnly = e.attributeValue("android:testOnly", "false").equalsIgnoreCase("true");
         usesCleartextTraffic = e.attributeValue("android:usesCleartextTraffic", "true").equalsIgnoreCase("true");
         vmSafeMode = e.attributeValue("android:vmSafeMode", "false").equalsIgnoreCase("true");
+
+        //        lists
 
         for (Object activityObject : e.elements(ManifestActivity.TAG)) {
             Element activity = (Element) activityObject;
@@ -85,7 +85,11 @@ public class ManifestApplication extends ManifestElement {
         for (Object activityAliasObject : e.elements(ManifestActivityAlias.TAG)) {
             Element activityAlias = (Element) activityAliasObject;
             ManifestActivityAlias maa = new ManifestActivityAlias(activityAlias);
-//            TODO add into activities
+            for (ManifestActivity mActivity : activities) {
+                if (mActivity.getName().equalsIgnoreCase(maa.getTargetActivity())) {
+                    mActivity.mergeActivityAlias(maa);
+                }
+            }
         }
 
         for (Object serviceObject : e.elements(ManifestService.TAG)) {
@@ -106,6 +110,7 @@ public class ManifestApplication extends ManifestElement {
             receivers.add(mReceiver);
         }
 
+        // unused
         for (Object libraryObject : e.elements(ManifestLibrary.TAG)) {
             Element library = (Element) libraryObject;
             ManifestLibrary mLibrary = new ManifestLibrary(library);
@@ -118,79 +123,26 @@ public class ManifestApplication extends ManifestElement {
         return activities;
     }
 
-    public void setActivities(List<ManifestActivity> activities) {
-        this.activities = activities;
-    }
-
-    public void addActivity(ManifestActivity activity) {
-        this.activities.add(activity);
-    }
-
-    public List<ManifestActivityAlias> getAlias() {
-        return alias;
-    }
-
-    public void setAlias(List<ManifestActivityAlias> alias) {
-        this.alias = alias;
-    }
-
-    public void addAlias(ManifestActivityAlias alias) {
-        this.alias.add(alias);
-    }
-
     public List<ManifestService> getServices() {
         return services;
-    }
-
-    public void setServices(List<ManifestService> services) {
-        this.services = services;
-    }
-
-    public void addService(ManifestService service) {
-        this.services.add(service);
     }
 
     public List<ManifestReceiver> getReceivers() {
         return receivers;
     }
 
-    public void setReceivers(List<ManifestReceiver> receivers) {
-        this.receivers = receivers;
-    }
-
-    public void addReceiver(ManifestReceiver receiver) {
-        this.receivers.add(receiver);
-    }
-
     public List<ManifestProvider> getProviders() {
         return providers;
-    }
-
-    public void setProviders(List<ManifestProvider> providers) {
-        this.providers = providers;
-    }
-
-    public void addProvider(ManifestProvider provider) {
-        this.providers.add(provider);
     }
 
     public List<ManifestLibrary> getLibraries() {
         return this.libraries;
     }
 
-    public void setLibraries(List<ManifestLibrary> libraries) {
-        this.libraries = libraries;
-    }
-
-    public void addLibrary(ManifestLibrary library) {
-        this.libraries.add(library);
-    }
-
     @Override
     public String toString() {
         String sb = ("name: " + this.name + "\n") +
                 "activities: " + ArrayUtil.serializeArray(activities, ", ") + "\n" +
-                "activities-alias: " + ArrayUtil.serializeArray(alias, ", ") + "\n" +
                 "service: " + ArrayUtil.serializeArray(services, ", ") + "\n" +
                 "receivers: " + ArrayUtil.serializeArray(services, ", ") + "\n" +
                 "providers: " + ArrayUtil.serializeArray(providers, ", ") + "\n" +

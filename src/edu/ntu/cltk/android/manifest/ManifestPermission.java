@@ -17,7 +17,6 @@ public class ManifestPermission extends ManifestElement {
         this.protectionLevel = element.attributeValue("android:protectionLevel");
     }
 
-    @Override
     public String getName() {
         return name;
     }
