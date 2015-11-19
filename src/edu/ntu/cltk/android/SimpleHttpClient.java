@@ -36,7 +36,7 @@ public class SimpleHttpClient implements HttpClient {
             BufferedReader rd = new BufferedReader(new InputStreamReader(
                     response.getEntity().getContent()));
             StringBuilder sb = new StringBuilder();
-            String line = "";
+            String line;
             while ((line = rd.readLine()) != null) {
                 sb.append(line);
             }

@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -23,6 +22,7 @@ public class ManifestDocument {
     private String packageName;
     private String versionCode;
     private String versionName;
+    private ManifestUsesSDK sdk;
     private ManifestApplication application;
     private List<ManifestPermission> permissions = new ArrayList<ManifestPermission>();
     private List<ManifestUsesPermission> usesPermissions = new ArrayList<ManifestUsesPermission>();
@@ -43,20 +43,23 @@ public class ManifestDocument {
             this.versionCode = root.attributeValue("android:versionCode");
             this.versionName = root.attributeValue("android:versionName");
 
-            for (Iterator iter = root.elementIterator(); iter.hasNext(); ) {
-                Element e = (Element) iter.next();
-                if (e.getName().equals(ManifestUsesPermission.TAG)) {
+            for (Object obj : root.elements()) {
+                Element e = (Element) obj;
+                String name = e.getName();
+                if (name.equals(ManifestUsesPermission.TAG)) {
                     ManifestUsesPermission usesPermission = new ManifestUsesPermission(e);
                     this.usesPermissions.add(usesPermission);
-                } else if (e.getName().equals(ManifestPermission.TAG)) {
+                } else if (name.equals(ManifestPermission.TAG)) {
                     ManifestPermission mp = new ManifestPermission(e);
                     this.permissions.add(mp);
-                } else if (e.getName().equals(ManifestApplication.TAG)) {
+                } else if (name.equals(ManifestApplication.TAG)) {
                     //  only 1 application per document
                     this.application = new ManifestApplication(e, this);
-                } else if (e.getName().equals(ManifestUsesFeature.TAG)) {
+                } else if (name.equals(ManifestUsesFeature.TAG)) {
                     ManifestUsesFeature muf = new ManifestUsesFeature(e);
                     this.usesFeatures.add(muf);
+                } else if (name.equals(ManifestUsesSDK.TAG)) {
+                    this.sdk = new ManifestUsesSDK(e);
                 }
             }
         } catch (DocumentException e) {

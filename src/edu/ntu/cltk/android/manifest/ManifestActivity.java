@@ -1,12 +1,14 @@
 package edu.ntu.cltk.android.manifest;
 
+import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
-public class ManifestActivity extends ManifestElement {
+public class ManifestActivity extends ManifestComponent {
+
+    private Logger logger = Logger.getLogger(ManifestActivity.class);
 
     public final static String TAG = "activity";
 
@@ -28,20 +30,17 @@ public class ManifestActivity extends ManifestElement {
     private String documentLaunchMode;
     private String launchMode;
     private String parentActivityName;
-    private String process;
     private String screenOrientation;
     private String taskAffinity;
     private String windowSoftInputMode;
 
+    public List<String> getAliases() {
+        return aliases;
+    }
+
     private List<String> aliases;
 
     private int maxRecents;
-
-    protected boolean enabled;
-    protected boolean exported;
-
-    protected String name;
-    protected String permission;
 
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
 
@@ -49,21 +48,31 @@ public class ManifestActivity extends ManifestElement {
         return name;
     }
 
-    public ManifestActivity() {
-        // preserved for ManifestActivityAlias construction
-    }
 
     public ManifestActivity(Element e) {
+        super(e);
+
         allowEmbedded = e.attributeValue("android:allowEmbedded", "false").equalsIgnoreCase("true");
         allowTaskReparenting = e.attributeValue("android:allowTaskReparenting", "false").equalsIgnoreCase("true");
         alwaysRetainTaskState = e.attributeValue("android:alwaysRetainTaskState", "false").equalsIgnoreCase("true");
         //  FIXME get default
-        autoRemoveFromRecents = e.attributeValue("android:autoRemoveFromRecents").equalsIgnoreCase("true");
+        String autoRemoveFromRecentsString = e.attributeValue("android:autoRemoveFromRecents");
+        if (autoRemoveFromRecentsString == null) {
+            logger.warn("no autoRemoveFromRecents, default to false");
+            autoRemoveFromRecents = false;
+        } else {
+            autoRemoveFromRecents = autoRemoveFromRecentsString.equalsIgnoreCase("true");
+        }
+
         clearTaskOnLaunch = e.attributeValue("android:clearTaskOnLaunch", "false").equalsIgnoreCase("true");
         enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
         excludeFromRecents = e.attributeValue("android:excludeFromRecents", "false").equalsIgnoreCase("true");
         //  TODO correct when Intent Filter exists
-        exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+        if (intentFilters.size() != 0) {
+            exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+        } else {
+            exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
+        }
         finishOnTaskLaunch = e.attributeValue("finishOnTaskLaunch", "false").equalsIgnoreCase("true");
         //  TODO
         hardwareAccelerated = e.attributeValue("android:hardwareAccelerated", "false").equalsIgnoreCase("true");
@@ -95,12 +104,6 @@ public class ManifestActivity extends ManifestElement {
             throw new InvalidManifestException(msg);
         }
 
-        for (Object intentFilterObj : e.elements(ManifestIntentFilter.TAG)) {
-            Element intentFilterEle = (Element) intentFilterObj;
-            ManifestIntentFilter mif = new ManifestIntentFilter(intentFilterEle);
-            intentFilters.add(mif);
-        }
-
     }
 
     public void mergeActivityAlias(ManifestActivityAlias alias) {
@@ -129,7 +132,7 @@ public class ManifestActivity extends ManifestElement {
 
     }
 
-    public List<ManifestIntentFilter> getIntentFilters() {
+    public List<ManifestIntentFilter> getIntentFilterList() {
         return intentFilters;
     }
 

@@ -21,7 +21,7 @@ public class Utility {
         }
         return name;
     }
-
+    
     public static InputStream getInputStreamFromApk(String apkFile) {
 
         File apkF = new File(apkFile);

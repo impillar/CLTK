@@ -6,7 +6,7 @@ public class ManifestLibrary extends ManifestElement {
 
     public final static String TAG = "uses-library";
 
-    public ManifestLibrary(Element element) {
+    public ManifestLibrary(Element e) {
     }
 
 }
