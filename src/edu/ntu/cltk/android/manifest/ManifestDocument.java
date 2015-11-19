@@ -36,13 +36,13 @@ import java.util.List;
 public class ManifestDocument {
 
     private String filePath;
+    private String packageName;
+    private String versionCode;
+    private String versionName;
     private ManifestApplication application;
     private List<ManifestPermission> permissions = new ArrayList<ManifestPermission>();
     private List<ManifestUsesPermission> usesPermissions = new ArrayList<ManifestUsesPermission>();
     private List<ManifestUsesFeature> usesFeatures = new ArrayList<ManifestUsesFeature>();
-    private String packageName;
-    private String versionCode;
-    private String versionName;
 
 
     public ManifestDocument(final String fpath) throws FileNotFoundException {
@@ -62,13 +62,17 @@ public class ManifestDocument {
             for (Iterator iter = root.elementIterator(); iter.hasNext(); ) {
                 Element e = (Element) iter.next();
                 if (e.getName().equals(ManifestUsesPermission.TAG)) {
-                    this.usesPermissions.add(new ManifestUsesPermission(e.attributeValue("name")));
+                    ManifestUsesPermission usesPermission = new ManifestUsesPermission(e);
+                    this.usesPermissions.add(usesPermission);
                 } else if (e.getName().equals(ManifestPermission.TAG)) {
-                    this.permissions.add(new ManifestPermission(e.attributeValue("name")));
+                    ManifestPermission mp = new ManifestPermission(e);
+                    this.permissions.add(mp);
                 } else if (e.getName().equals(ManifestApplication.TAG)) {
+//                    only 1 application per document
                     this.application = new ManifestApplication(e, this.packageName);
                 } else if (e.getName().equals(ManifestUsesFeature.TAG)) {
-                    this.usesFeatures.add(new ManifestUsesFeature(e.attributeValue("name")));
+                    ManifestUsesFeature muf = new ManifestUsesFeature(e);
+                    this.usesFeatures.add(muf);
                 }
             }
         } catch (DocumentException e) {

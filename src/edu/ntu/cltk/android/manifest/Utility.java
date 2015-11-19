@@ -9,6 +9,8 @@ import java.util.zip.ZipFile;
 
 @SuppressWarnings("unused")
 public class Utility {
+    public static final String manifestFileName = "AndroidManifest.xml";
+
     public static String getSootName(String name) {
         return name.replace('.', '/');
     }
@@ -37,7 +39,7 @@ public class Utility {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String entryName = entry.getName();
                 // We are dealing with the Android manifest
-                if (entryName.equals("AndroidManifest.xml")) {
+                if (entryName.equals(manifestFileName)) {
                     manifestIS = archive.getInputStream(entry);
                     break;
                 }

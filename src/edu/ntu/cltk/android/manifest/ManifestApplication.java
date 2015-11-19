@@ -4,12 +4,37 @@ import edu.ntu.cltk.data.ArrayUtil;
 import org.dom4j.Element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ManifestApplication extends ManifestElement {
 
     public final static String TAG = "application";
+
+    private ManifestDocument parent;
+
+    private String backupAgent; // no default
+    private String manageSpaceActivity;
+    private String name;
+    private String permission;
+    private String process;
+    private String requiredAccountType;
+    private String restrictedAccountType;
+    private String taskAffinity;
+
+    private boolean allowBackup;
+    private boolean debuggable;
+    private boolean enabled;
+    private boolean hasCode;
+    private boolean hardwareAccelerated;
+    private boolean killAfterRestore;
+    private boolean largeHeap;
+    private boolean persistent;
+    private boolean restoreAnyVersion; // default to false
+    private boolean supportsRtl;
+    private boolean testOnly;
+    private boolean usesCleartextTraffic;
+    private boolean vmSafeMode;
+
 
     private List<ManifestActivity> activities = new ArrayList<ManifestActivity>();
     private List<ManifestActivityAlias> alias = new ArrayList<ManifestActivityAlias>();
@@ -18,99 +43,74 @@ public class ManifestApplication extends ManifestElement {
     private List<ManifestProvider> providers = new ArrayList<ManifestProvider>();
     private List<ManifestLibrary> libraries = new ArrayList<ManifestLibrary>();
 
-    public ManifestApplication() {
-        super(TAG);
-    }
 
-    public ManifestApplication(Element e, String packageName) {
+    public ManifestApplication(Element e, ManifestDocument parent) {
+        this.parent = parent;
+        String packageName = parent.getPackageName();
 
-        String appName = Utility.getQName(packageName, e.attributeValue("name"));
-        setName(appName);
+        backupAgent = e.attributeValue("android:backupAgent");
+        manageSpaceActivity = e.attributeValue("android:manageSpaceActivity");
+        name = e.attributeValue("android:name");
+        permission = e.attributeValue("android:permission");
+        process = e.attributeValue("android:process");
+        requiredAccountType = e.attributeValue("android:requiredAccountType");
+        restrictedAccountType = e.attributeValue("android:restrictedAccountType");
+        taskAffinity = e.attributeValue("android:taskAffinity");
 
-        for (Iterator appIter = e.elementIterator(ManifestActivity.TAG); appIter.hasNext(); ) {
-            Element act = (Element) appIter.next();
-            String actName = Utility.getQName(packageName, act.attributeValue("name"));
-            ManifestActivity mActivity = new ManifestActivity(actName);
 
-            for (Iterator inIter = act.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
-                Element filter = (Element) inIter.next();
-                String action = filter.element("action") == null ? null : filter.element("action").attributeValue("name");
-                String category = filter.elementText("category") == null ? null : filter.element("category").attributeValue("name");
-                String data = filter.element("data") == null ? null : filter.element("data").attributeValue("name");
+        allowBackup = e.attributeValue("android:allowBackup", "true").equalsIgnoreCase("true");
+        debuggable = e.attributeValue("android:debuggable", "false").equalsIgnoreCase("true");
+        enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
+        hasCode = e.attributeValue("android:hasCode").equalsIgnoreCase("true");
+//  FIXME: incorrect here since related to sdk version
+        hardwareAccelerated = e.attributeValue("android:hardwareAccelerated").equalsIgnoreCase("true");
+        killAfterRestore = e.attributeValue("android:killAfterRestore", "true").equalsIgnoreCase("true");
+//        FIXME; may be null
+        largeHeap = e.attributeValue("android:largeHeap").equalsIgnoreCase("true");
+        persistent = e.attributeValue("android:persistent", "false").equalsIgnoreCase("true");
+        restoreAnyVersion = e.attributeValue("android:restoreAnyVersion", "false").equalsIgnoreCase("true");
+//        TODO ensure correctness
+        supportsRtl = e.attributeValue("android:supportsRtl", "false").equalsIgnoreCase("true");
+//        TODO
+        testOnly = e.attributeValue("android:testOnly", "false").equalsIgnoreCase("true");
+        usesCleartextTraffic = e.attributeValue("android:usesCleartextTraffic", "true").equalsIgnoreCase("true");
+        vmSafeMode = e.attributeValue("android:vmSafeMode", "false").equalsIgnoreCase("true");
 
-                mActivity.addIntentFilter(new ManifestIntentFilter(action, category, data));
-
-            }
-
-            addActivity(mActivity);
-        }
-        for (Iterator appIter = e.elementIterator(ManifestActivityAlias.TAG); appIter.hasNext(); ) {
-            Element act = (Element) appIter.next();
-//                        FIXME may be wrong
-            String actName = Utility.getQName(packageName, act.attributeValue("name"));
-            ManifestActivityAlias mActivity = new ManifestActivityAlias(actName);
-
-            for (Iterator inIter = act.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
-                Element filter = (Element) inIter.next();
-                ManifestIntentFilter mif = new ManifestIntentFilter(filter);
-                mActivity.addIntentFilter(mif);
-            }
-
-            addActivity(mActivity);
-        }
-        for (Iterator appIter = e.elementIterator(ManifestService.TAG); appIter.hasNext(); ) {
-            Element service = (Element) appIter.next();
-            String serviceName = Utility.getQName(packageName, service.attributeValue("name"));
-            ManifestService mService = new ManifestService(serviceName);
-
-            for (Iterator inIter = service.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
-                Element ifElement = (Element) inIter.next();
-                ManifestIntentFilter intentFilter = new ManifestIntentFilter(ifElement);
-                mService.addIntentFilter(intentFilter);
-            }
-
-            addService(mService);
-        }
-        for (Iterator appIter = e.elementIterator(ManifestProvider.TAG); appIter.hasNext(); ) {
-
-            Element provider = (Element) appIter.next();
-            String providerName = Utility.getQName(packageName, provider.attributeValue("name"));
-            ManifestProvider mProvider = new ManifestProvider(providerName);
-
-            String grantUriPermission = provider.elementText("grant-uri-permission");
-            String metaData = provider.elementText("meta-data");
-            String pathPermission = provider.elementText("path-permission");
-
-            mProvider.setGrantUriPermission(grantUriPermission);
-            mProvider.setMetaData(metaData);
-            mProvider.setPathPermission(pathPermission);
-
-            addProvider(mProvider);
-
-        }
-        for (Iterator appIter = e.elementIterator(ManifestReceiver.TAG); appIter.hasNext(); ) {
-
-            Element receiver = (Element) appIter.next();
-            String receiverName = Utility.getQName(packageName, receiver.attributeValue("name"));
-            ManifestReceiver mReceiver = new ManifestReceiver(receiverName);
-
-            for (Iterator inIter = receiver.elementIterator(ManifestIntentFilter.TAG); inIter.hasNext(); ) {
-                Element filter = (Element) inIter.next();
-                ManifestIntentFilter intentFilter = new ManifestIntentFilter(filter);
-                mReceiver.addIntentFilter(intentFilter);
-            }
-
-            addReceiver(mReceiver);
+        for (Object activityObject : e.elements(ManifestActivity.TAG)) {
+            Element activity = (Element) activityObject;
+            ManifestActivity mActivity = new ManifestActivity(activity);
+            activities.add(mActivity);
         }
 
-        for (Iterator fetIter = e.elementIterator(ManifestLibrary.TAG); fetIter.hasNext(); ) {
-            Element feature = (Element) fetIter.next();
-            addLibrary(new ManifestLibrary(feature.attributeValue("name")));
+        for (Object activityAliasObject : e.elements(ManifestActivityAlias.TAG)) {
+            Element activityAlias = (Element) activityAliasObject;
+            ManifestActivityAlias maa = new ManifestActivityAlias(activityAlias);
+//            TODO add into activities
         }
-    }
 
-    public void setName(String name) {
-        this.name = name;
+        for (Object serviceObject : e.elements(ManifestService.TAG)) {
+            Element service = (Element) serviceObject;
+            ManifestService mService = new ManifestService(service);
+            services.add(mService);
+        }
+
+        for (Object providerObject : e.elements(ManifestProvider.TAG)) {
+            Element provider = (Element) providerObject;
+            ManifestProvider mProvider = new ManifestProvider(provider);
+            providers.add(mProvider);
+        }
+
+        for (Object receiverObject : e.elements(ManifestReceiver.TAG)) {
+            Element receiver = (Element) receiverObject;
+            ManifestReceiver mReceiver = new ManifestReceiver(receiver);
+            receivers.add(mReceiver);
+        }
+
+        for (Object libraryObject : e.elements(ManifestLibrary.TAG)) {
+            Element library = (Element) libraryObject;
+            ManifestLibrary mLibrary = new ManifestLibrary(library);
+        }
+
     }
 
 
@@ -186,17 +186,15 @@ public class ManifestApplication extends ManifestElement {
         this.libraries.add(library);
     }
 
-    @SuppressWarnings({"StringBufferReplaceableByString", "StringConcatenationInsideStringBufferAppend"})
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("name: " + this.name + "\n");
-        sb.append("activities: " + ArrayUtil.serializeArray(activities, ", ") + "\n");
-        sb.append("activities-alias: " + ArrayUtil.serializeArray(alias, ", ") + "\n");
-        sb.append("service: " + ArrayUtil.serializeArray(services, ", ") + "\n");
-        sb.append("receivers: " + ArrayUtil.serializeArray(services, ", ") + "\n");
-        sb.append("providers: " + ArrayUtil.serializeArray(providers, ", ") + "\n");
-        sb.append("libraries: " + ArrayUtil.serializeArray(libraries, ", ") + "\n");
-        return sb.toString();
+        String sb = ("name: " + this.name + "\n") +
+                "activities: " + ArrayUtil.serializeArray(activities, ", ") + "\n" +
+                "activities-alias: " + ArrayUtil.serializeArray(alias, ", ") + "\n" +
+                "service: " + ArrayUtil.serializeArray(services, ", ") + "\n" +
+                "receivers: " + ArrayUtil.serializeArray(services, ", ") + "\n" +
+                "providers: " + ArrayUtil.serializeArray(providers, ", ") + "\n" +
+                "libraries: " + ArrayUtil.serializeArray(libraries, ", ") + "\n";
+        return sb;
     }
 }

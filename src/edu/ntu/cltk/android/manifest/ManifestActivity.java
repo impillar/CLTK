@@ -1,5 +1,7 @@
 package edu.ntu.cltk.android.manifest;
 
+import org.dom4j.Element;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,8 @@ public class ManifestActivity extends ManifestElement {
     public final static String TAG = "activity";
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
 
-    public ManifestActivity(String name) {
-        super(name);
+    public ManifestActivity(Element element){
+
     }
 
 

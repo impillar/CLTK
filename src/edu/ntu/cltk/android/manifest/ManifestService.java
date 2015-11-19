@@ -1,5 +1,7 @@
 package edu.ntu.cltk.android.manifest;
 
+import org.dom4j.Element;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +12,7 @@ public class ManifestService extends ManifestElement {
 
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
 
-    protected ManifestService(String serviceName) {
-        super(serviceName);
+    protected ManifestService(Element element) {
     }
 
     public void addIntentFilter(ManifestIntentFilter intentFilter) {

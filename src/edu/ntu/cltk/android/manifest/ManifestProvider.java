@@ -1,5 +1,7 @@
 package edu.ntu.cltk.android.manifest;
 
+import org.dom4j.Element;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +14,7 @@ public class ManifestProvider extends ManifestElement {
     private String metaData;
     private String pathPermission;
 
-    protected ManifestProvider(String providerName) {
-        super(providerName);
+    protected ManifestProvider(Element element) {
     }
 
     public String getGrantUriPermission() {

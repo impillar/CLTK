@@ -1,5 +1,7 @@
 package edu.ntu.cltk.android.manifest;
 
+import org.dom4j.Element;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,7 @@ public class ManifestReceiver extends ManifestElement {
     public final static String TAG = "receiver";
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
 
-    protected ManifestReceiver(String receiverName) {
-        super(receiverName);
+    protected ManifestReceiver(Element element) {
     }
 
 

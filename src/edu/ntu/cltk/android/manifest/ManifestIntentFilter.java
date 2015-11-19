@@ -13,7 +13,6 @@ public class ManifestIntentFilter extends ManifestElement {
     protected String data;
 
     public ManifestIntentFilter(String action, String category, String data) {
-        super(TAG);
         this.action = action;
         this.category = category;
         this.data = data;
