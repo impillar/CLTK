@@ -15,11 +15,20 @@ public class ManifestProvider extends ManifestComponent {
     private boolean syncable;
     private String writePermission;
 
-    public ManifestProvider(Element e) {
+    public ManifestProvider(Element e, ManifestDocument doc) {
         super(e);
         //        list?
         authorities = e.attributeValue("android:authorities");
-        //        FIXME version changes for exported; shold rewrite ManifestComponent
+        // TODO ensure correctness
+        // rewrite ManifestComponent;
+        String exportedString = e.attributeValue("android:exported");
+        //        TODO the official doc is messy, need to confirm
+        ManifestUsesSDK sdk = doc.getSDK();
+        if (sdk.minSdkVersion < 17 || sdk.targetSdkVersion < 17) {
+            exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+        } else {
+            exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
+        }
         grantUriPermission = e.attributeValue("android:grantUriPermissions", "false").equalsIgnoreCase("true");
         String initOrderString = e.attributeValue("android:initOrder");
         initOrder = Integer.parseInt(initOrderString);

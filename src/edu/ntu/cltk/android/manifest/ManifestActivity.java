@@ -44,10 +44,6 @@ public class ManifestActivity extends ManifestComponent {
 
     protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
 
-    public String getName() {
-        return name;
-    }
-
 
     public ManifestActivity(Element e) {
         super(e);

@@ -114,4 +114,7 @@ public class ManifestDocument {
         return s;
     }
 
+    public ManifestUsesSDK getSDK() {
+        return sdk;
+    }
 }

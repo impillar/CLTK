@@ -10,9 +10,28 @@ public class ManifestUsesSDK extends ManifestElement {
     public final int targetSdkVersion;
     public final int maxSdkVersion;
 
+    //    TODO make it utility
+    int tryParseInt(String str, int defaultVal) {
+        if (str == null) {
+            return defaultVal;
+        }
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            throw new InvalidManifestException(e.getMessage());
+        }
+    }
+
     public ManifestUsesSDK(Element e) {
-        minSdkVersion = Integer.parseInt(e.attributeValue("android:minSdkVersion"));
-        targetSdkVersion = Integer.parseInt(e.attributeValue("android:targetSdkVersion"));
-        maxSdkVersion = Integer.parseInt(e.attributeValue("android:maxSdkVersion"));
+        String minString = e.attributeValue("android:minSdkVersion");
+        minSdkVersion = tryParseInt(minString, 1);
+
+        String targetString = e.attributeValue("android:targetSdkVersion");
+        targetSdkVersion = tryParseInt(targetString, minSdkVersion);
+
+        //        FIXME not used
+        String maxString = e.attributeValue("android:maxSdkVersion");
+        maxSdkVersion = tryParseInt(maxString, targetSdkVersion);
+
     }
 }
