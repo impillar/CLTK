@@ -57,17 +57,17 @@ public abstract class ManifestComponent extends ManifestElement {
             ManifestIntentFilter mif = new ManifestIntentFilter(intentFilterEle);
             intentFilters.add(mif);
         }
-        enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
+        enabled = e.attributeValue("enabled", "true").equalsIgnoreCase("true");
         // has intentFilters => exported defaults to true; otherwise, false
         if (intentFilters.size() != 0) {
-            exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+            exported = e.attributeValue("exported", "true").equalsIgnoreCase("true");
         } else {
-            exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
+            exported = e.attributeValue("exported", "false").equalsIgnoreCase("true");
         }
-        name = e.attributeValue("android:name");
+        name = e.attributeValue("name");
 
-        permission = e.attributeValue("android:permission");
-        process = e.attributeValue("android:process");
+        permission = e.attributeValue("permission");
+        process = e.attributeValue("process");
 
     }
 

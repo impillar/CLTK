@@ -27,14 +27,14 @@ public class ManifestUsesSDK extends ManifestElement {
     }
 
     public ManifestUsesSDK(Element e) {
-        String minString = e.attributeValue("android:minSdkVersion");
+        String minString = e.attributeValue("minSdkVersion");
         minSdkVersion = tryParseInt(minString, 1);
 
-        String targetString = e.attributeValue("android:targetSdkVersion");
+        String targetString = e.attributeValue("targetSdkVersion");
         targetSdkVersion = tryParseInt(targetString, minSdkVersion);
 
         //        FIXME not used
-        String maxString = e.attributeValue("android:maxSdkVersion");
+        String maxString = e.attributeValue("maxSdkVersion");
         maxSdkVersion = tryParseInt(maxString, targetSdkVersion);
 
     }

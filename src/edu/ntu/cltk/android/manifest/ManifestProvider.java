@@ -18,25 +18,25 @@ public class ManifestProvider extends ManifestComponent {
     public ManifestProvider(Element e, ManifestDocument doc) {
         super(e);
         //        list?
-        authorities = e.attributeValue("android:authorities");
+        authorities = e.attributeValue("authorities");
         // TODO ensure correctness
         // rewrite ManifestComponent;
-        String exportedString = e.attributeValue("android:exported");
+        String exportedString = e.attributeValue("exported");
         //        TODO the official doc is messy, need to confirm
         ManifestUsesSDK sdk = doc.getSDK();
         if (sdk.minSdkVersion < 17 || sdk.targetSdkVersion < 17) {
-            exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+            exported = e.attributeValue("exported", "true").equalsIgnoreCase("true");
         } else {
-            exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
+            exported = e.attributeValue("exported", "false").equalsIgnoreCase("true");
         }
-        grantUriPermission = e.attributeValue("android:grantUriPermissions", "false").equalsIgnoreCase("true");
-        String initOrderString = e.attributeValue("android:initOrder");
+        grantUriPermission = e.attributeValue("grantUriPermissions", "false").equalsIgnoreCase("true");
+        String initOrderString = e.attributeValue("initOrder");
         initOrder = Integer.parseInt(initOrderString);
-        multiprocess = e.attributeValue("android:multiprocess", "false").equalsIgnoreCase("true");
-        readPermission = e.attributeValue("android:readPermission");
+        multiprocess = e.attributeValue("multiprocess", "false").equalsIgnoreCase("true");
+        readPermission = e.attributeValue("readPermission");
         //        FIXME not sure
-        syncable = e.attributeValue("android:syncable", "true").equalsIgnoreCase("true");
-        writePermission = e.attributeValue("android:writePermission");
+        syncable = e.attributeValue("syncable", "true").equalsIgnoreCase("true");
+        writePermission = e.attributeValue("writePermission");
 
     }
 
