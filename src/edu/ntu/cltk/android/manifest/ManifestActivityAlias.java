@@ -10,7 +10,7 @@ public class ManifestActivityAlias extends ManifestComponent {
 
     public ManifestActivityAlias(Element e) {
         super(e);
-        targetActivity = e.attributeValue("android:targetActivity");
+        targetActivity = Utility.getAttributeValue(e ,"android:targetActivity");
     }
 
 

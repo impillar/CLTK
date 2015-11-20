@@ -2,7 +2,6 @@ package edu.ntu.cltk.android.manifest;
 
 import edu.ntu.cltk.data.ArrayUtil;
 import org.dom4j.Element;
-import org.dom4j.QName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,38 +46,38 @@ public class ManifestApplication extends ManifestElement {
     public ManifestApplication(Element e, ManifestDocument parent) {
         this.parent = parent;
 
-        backupAgent = e.attributeValue(new QName("android:backupAgent"));
-        manageSpaceActivity = e.attributeValue(new QName("android:manageSpaceActivity"));
-        name = e.attributeValue("android:name");
-        permission = e.attributeValue("android:permission");
-        process = e.attributeValue("android:process");
-        requiredAccountType = e.attributeValue("android:requiredAccountType");
-        restrictedAccountType = e.attributeValue("android:restrictedAccountType");
-        taskAffinity = e.attributeValue("android:taskAffinity");
+        backupAgent = Utility.getAttributeValue(e, "android:backupAgent");
+        manageSpaceActivity = Utility.getAttributeValue(e, "android:manageSpaceActivity");
+        name = Utility.getAttributeValue(e, "android:name");
+        permission = Utility.getAttributeValue(e, "android:permission");
+        process = Utility.getAttributeValue(e, "android:process");
+        requiredAccountType = Utility.getAttributeValue(e, "android:requiredAccountType");
+        restrictedAccountType = Utility.getAttributeValue(e, "android:restrictedAccountType");
+        taskAffinity = Utility.getAttributeValue(e, "android:taskAffinity");
 
 
-        allowBackup = e.attributeValue("android:allowBackup", "true").equalsIgnoreCase("true");
-        debuggable = e.attributeValue("android:debuggable", "false").equalsIgnoreCase("true");
-        enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
+        allowBackup = Utility.getAttributeValue(e, "android:allowBackup", "true").equalsIgnoreCase("true");
+        debuggable = Utility.getAttributeValue(e, "android:debuggable", "false").equalsIgnoreCase("true");
+        enabled = Utility.getAttributeValue(e, "android:enabled", "true").equalsIgnoreCase("true");
 
-        hasCode = e.attributeValue("android:hasCode", "true").equalsIgnoreCase("true");
+        hasCode = Utility.getAttributeValue(e, "android:hasCode", "true").equalsIgnoreCase("true");
         ManifestUsesSDK sdk = parent.getSDK();
         if (sdk.minSdkVersion >= 14 || sdk.targetSdkVersion >= 14) {
-            hardwareAccelerated = e.attributeValue("android:hardwareAccelerated", "true").equalsIgnoreCase("true");
+            hardwareAccelerated = Utility.getAttributeValue(e, "android:hardwareAccelerated", "true").equalsIgnoreCase("true");
         } else {
-            hardwareAccelerated = e.attributeValue("android:hardwareAccelerated", "false").equalsIgnoreCase("true");
+            hardwareAccelerated = Utility.getAttributeValue(e, "android:hardwareAccelerated", "false").equalsIgnoreCase("true");
         }
-        killAfterRestore = e.attributeValue("android:killAfterRestore", "true").equalsIgnoreCase("true");
+        killAfterRestore = Utility.getAttributeValue(e, "android:killAfterRestore", "true").equalsIgnoreCase("true");
         //  TODO: ensure correctness
-        largeHeap = e.attributeValue("android:largeHeap", "false").equalsIgnoreCase("true");
-        persistent = e.attributeValue("android:persistent", "false").equalsIgnoreCase("true");
-        restoreAnyVersion = e.attributeValue("android:restoreAnyVersion", "false").equalsIgnoreCase("true");
+        largeHeap = Utility.getAttributeValue(e, "android:largeHeap", "false").equalsIgnoreCase("true");
+        persistent = Utility.getAttributeValue(e, "android:persistent", "false").equalsIgnoreCase("true");
+        restoreAnyVersion = Utility.getAttributeValue(e, "android:restoreAnyVersion", "false").equalsIgnoreCase("true");
         //  TODO ensure correctness
-        supportsRtl = e.attributeValue("android:supportsRtl", "false").equalsIgnoreCase("true");
+        supportsRtl = Utility.getAttributeValue(e, "android:supportsRtl", "false").equalsIgnoreCase("true");
         //  TODO
-        testOnly = e.attributeValue("android:testOnly", "false").equalsIgnoreCase("true");
-        usesCleartextTraffic = e.attributeValue("android:usesCleartextTraffic", "true").equalsIgnoreCase("true");
-        vmSafeMode = e.attributeValue("android:vmSafeMode", "false").equalsIgnoreCase("true");
+        testOnly = Utility.getAttributeValue(e, "android:testOnly", "false").equalsIgnoreCase("true");
+        usesCleartextTraffic = Utility.getAttributeValue(e, "android:usesCleartextTraffic", "true").equalsIgnoreCase("true");
+        vmSafeMode = Utility.getAttributeValue(e, "android:vmSafeMode", "false").equalsIgnoreCase("true");
 
         //        lists
 
@@ -92,10 +91,10 @@ public class ManifestApplication extends ManifestElement {
             Element activityAlias = (Element) activityAliasObject;
             ManifestActivityAlias maa = new ManifestActivityAlias(activityAlias);
             for (ManifestActivity mActivity : activities) {
-                //                String activityName = mActivity.getName();
-                //                if (activityName.equalsIgnoreCase(maa.getTargetActivity())) {
-                //                    mActivity.mergeActivityAlias(maa);
-                //                }
+                String activityName = mActivity.getName();
+                if (activityName.equalsIgnoreCase(maa.getTargetActivity())) {
+                    mActivity.mergeActivityAlias(maa);
+                }
             }
         }
 

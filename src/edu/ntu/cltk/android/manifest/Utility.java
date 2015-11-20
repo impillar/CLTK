@@ -25,19 +25,30 @@ public class Utility {
         return name;
     }
 
-    public static String getAttributeValue(Element e, String name) {
+    public static String getAttributeValue(Element element, String name) {
+        return getAttributeValue(element, name, null);
+    }
+
+    public static boolean equalsOrOneEmpty(String s1, String s2) {
+        return s1 == null || s2 == null || s1.equals(s2);
+    }
+
+    public static String getAttributeValue(Element element, String name, String defaultVal) {
         if (name.contains(":")) {
             String[] splited = name.split(":");
             assert splited.length == 2;
-            Attribute attribute = e.attribute(splited[1]);
+            Attribute attribute = element.attribute(splited[1]);
+            if (attribute == null) {
+                return defaultVal;
+            }
             String elementQName = attribute.getQName().getQualifiedName();
             if (elementQName.equals(name)) {
                 return attribute.getValue();
             } else {
-                return null;
+                return defaultVal;
             }
         } else {
-            return e.attributeValue(name);
+            return element.attributeValue(name, defaultVal);
         }
 
     }

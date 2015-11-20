@@ -18,26 +18,26 @@ public class ManifestProvider extends ManifestComponent {
     public ManifestProvider(Element e, ManifestDocument doc) {
         super(e);
         //        list?
-        authorities = e.attributeValue("android:authorities");
+        authorities = Utility.getAttributeValue(e ,"android:authorities");
         // TODO ensure correctness
         // rewrite ManifestComponent;
-        String exportedString = e.attributeValue("android:exported");
+        String exportedString = Utility.getAttributeValue(e ,"android:exported");
         //        TODO the official doc is messy, need to confirm
         ManifestUsesSDK sdk = doc.getSDK();
         if (sdk.minSdkVersion < 17 || sdk.targetSdkVersion < 17) {
-            exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+            exported = Utility.getAttributeValue(e ,"android:exported", "true").equalsIgnoreCase("true");
         } else {
-            exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
+            exported = Utility.getAttributeValue(e ,"android:exported", "false").equalsIgnoreCase("true");
         }
-        grantUriPermission = e.attributeValue("android:grantUriPermissions", "false").equalsIgnoreCase("true");
+        grantUriPermission = Utility.getAttributeValue(e ,"android:grantUriPermissions", "false").equalsIgnoreCase("true");
         //        FIXME NOT sure
-        String initOrderString = e.attributeValue("android:initOrder");
+        String initOrderString = Utility.getAttributeValue(e ,"android:initOrder");
         initOrder = Utility.tryParseInt(initOrderString, 0);
-        multiprocess = e.attributeValue("android:multiprocess", "false").equalsIgnoreCase("true");
-        readPermission = e.attributeValue("android:readPermission");
+        multiprocess = Utility.getAttributeValue(e ,"android:multiprocess", "false").equalsIgnoreCase("true");
+        readPermission = Utility.getAttributeValue(e ,"android:readPermission");
         //        FIXME not sure
-        syncable = e.attributeValue("android:syncable", "true").equalsIgnoreCase("true");
-        writePermission = e.attributeValue("android:writePermission");
+        syncable = Utility.getAttributeValue(e ,"android:syncable", "true").equalsIgnoreCase("true");
+        writePermission = Utility.getAttributeValue(e ,"android:writePermission");
 
     }
 

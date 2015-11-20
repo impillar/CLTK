@@ -1,7 +1,6 @@
 package edu.ntu.cltk.android.manifest;
 
 import org.dom4j.Element;
-import org.dom4j.QName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,19 +57,18 @@ public abstract class ManifestComponent extends ManifestElement {
             ManifestIntentFilter mif = new ManifestIntentFilter(intentFilterEle);
             intentFilters.add(mif);
         }
-        enabled = e.attributeValue(new QName("android:enabled"), "true").equalsIgnoreCase("true");
+        enabled = Utility.getAttributeValue(e, "android:enabled", "true").equalsIgnoreCase("true");
         // has intentFilters => exported defaults to true; otherwise, false
         if (intentFilters.size() != 0) {
-            exported = e.attributeValue(new QName("android:exported"), "true").equalsIgnoreCase("true");
+            exported = Utility.getAttributeValue(e, "android:exported", "true").equalsIgnoreCase("true");
         } else {
-            exported = e.attributeValue(new QName("android:exported"), "false").equalsIgnoreCase("true");
+            exported = Utility.getAttributeValue(e, "android:exported", "false").equalsIgnoreCase("true");
         }
-        QName qname = new QName("android:name");
-        QName qName2 = new QName("name");
-        name = e.attributeValue(qName2);
 
-        permission = e.attributeValue(new QName("android:permission"));
-        process = e.attributeValue(new QName("android:process"));
+        name = Utility.getAttributeValue(e, "android:name");
+
+        permission = Utility.getAttributeValue(e, "android:permission");
+        process = Utility.getAttributeValue(e, "android:process");
 
     }
 

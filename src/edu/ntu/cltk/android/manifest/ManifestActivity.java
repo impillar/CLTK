@@ -48,11 +48,11 @@ public class ManifestActivity extends ManifestComponent {
     public ManifestActivity(Element e) {
         super(e);
 
-        allowEmbedded = e.attributeValue("android:allowEmbedded", "false").equalsIgnoreCase("true");
-        allowTaskReparenting = e.attributeValue("android:allowTaskReparenting", "false").equalsIgnoreCase("true");
-        alwaysRetainTaskState = e.attributeValue("android:alwaysRetainTaskState", "false").equalsIgnoreCase("true");
+        allowEmbedded = Utility.getAttributeValue(e, "android:allowEmbedded", "false").equalsIgnoreCase("true");
+        allowTaskReparenting = Utility.getAttributeValue(e, "android:allowTaskReparenting", "false").equalsIgnoreCase("true");
+        alwaysRetainTaskState = Utility.getAttributeValue(e, "android:alwaysRetainTaskState", "false").equalsIgnoreCase("true");
         //  FIXME get default
-        String autoRemoveFromRecentsString = e.attributeValue("android:autoRemoveFromRecents");
+        String autoRemoveFromRecentsString = Utility.getAttributeValue(e, "android:autoRemoveFromRecents");
         if (autoRemoveFromRecentsString == null) {
             logger.warn("no autoRemoveFromRecents, default to false");
             autoRemoveFromRecents = false;
@@ -60,37 +60,37 @@ public class ManifestActivity extends ManifestComponent {
             autoRemoveFromRecents = autoRemoveFromRecentsString.equalsIgnoreCase("true");
         }
 
-        clearTaskOnLaunch = e.attributeValue("android:clearTaskOnLaunch", "false").equalsIgnoreCase("true");
-        enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
-        excludeFromRecents = e.attributeValue("android:excludeFromRecents", "false").equalsIgnoreCase("true");
+        clearTaskOnLaunch = Utility.getAttributeValue(e, "android:clearTaskOnLaunch", "false").equalsIgnoreCase("true");
+        enabled = Utility.getAttributeValue(e, "android:enabled", "true").equalsIgnoreCase("true");
+        excludeFromRecents = Utility.getAttributeValue(e, "android:excludeFromRecents", "false").equalsIgnoreCase("true");
         //  TODO correct when Intent Filter exists
         if (intentFilters.size() != 0) {
-            exported = e.attributeValue("android:exported", "true").equalsIgnoreCase("true");
+            exported = Utility.getAttributeValue(e, "android:exported", "true").equalsIgnoreCase("true");
         } else {
-            exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
+            exported = Utility.getAttributeValue(e, "android:exported", "false").equalsIgnoreCase("true");
         }
-        finishOnTaskLaunch = e.attributeValue("android:finishOnTaskLaunch", "false").equalsIgnoreCase("true");
+        finishOnTaskLaunch = Utility.getAttributeValue(e, "android:finishOnTaskLaunch", "false").equalsIgnoreCase("true");
         //  TODO
-        hardwareAccelerated = e.attributeValue("android:hardwareAccelerated", "false").equalsIgnoreCase("true");
-        multiprocess = e.attributeValue("android:multiprocess", "false").equalsIgnoreCase("true");
-        noHistory = e.attributeValue("android:noHistory", "fasle").equalsIgnoreCase("true");
-        relinquishTaskIdentity = e.attributeValue("android:relinquishTaskIdentity", "false").equalsIgnoreCase("true");
-        stateNotNeeded = e.attributeValue("android:stateNotNeeded", "false").equalsIgnoreCase("true");
+        hardwareAccelerated = Utility.getAttributeValue(e, "android:hardwareAccelerated", "false").equalsIgnoreCase("true");
+        multiprocess = Utility.getAttributeValue(e, "android:multiprocess", "false").equalsIgnoreCase("true");
+        noHistory = Utility.getAttributeValue(e, "android:noHistory", "fasle").equalsIgnoreCase("true");
+        relinquishTaskIdentity = Utility.getAttributeValue(e, "android:relinquishTaskIdentity", "false").equalsIgnoreCase("true");
+        stateNotNeeded = Utility.getAttributeValue(e, "android:stateNotNeeded", "false").equalsIgnoreCase("true");
 
 
-        configChanges = e.attributeValue("android:configChanges");
-        documentLaunchMode = e.attributeValue("android:documentLaunchMode");
-        launchMode = e.attributeValue("android:launchMode");
-        name = e.attributeValue("android:name");
-        parentActivityName = e.attributeValue("android:parentActivityName");
-        permission = e.attributeValue("android:permission");
-        process = e.attributeValue("android:process");
-        screenOrientation = e.attributeValue("android:screenOrientation");
-        taskAffinity = e.attributeValue("android:taskAffinity");
-        windowSoftInputMode = e.attributeValue("android:windowSoftInputMode");
+        configChanges = Utility.getAttributeValue(e, "android:configChanges");
+        documentLaunchMode = Utility.getAttributeValue(e, "android:documentLaunchMode");
+        launchMode = Utility.getAttributeValue(e, "android:launchMode");
+        name = Utility.getAttributeValue(e, "android:name");
+        parentActivityName = Utility.getAttributeValue(e, "android:parentActivityName");
+        permission = Utility.getAttributeValue(e, "android:permission");
+        process = Utility.getAttributeValue(e, "android:process");
+        screenOrientation = Utility.getAttributeValue(e, "android:screenOrientation");
+        taskAffinity = Utility.getAttributeValue(e, "android:taskAffinity");
+        windowSoftInputMode = Utility.getAttributeValue(e, "android:windowSoftInputMode");
 
 
-        String maxRecentsString = e.attributeValue("android:maxRecents");
+        String maxRecentsString = Utility.getAttributeValue(e, "android:maxRecents");
         if (maxRecentsString == null || maxRecentsString.equals("")) {
             maxRecents = 16;
         } else {
@@ -105,7 +105,7 @@ public class ManifestActivity extends ManifestComponent {
 
     public void mergeActivityAlias(ManifestActivityAlias alias) {
         assert name.equals(alias.getTargetActivity());
-        boolean permissionEqual = permission.equalsIgnoreCase(alias.permission);
+        boolean permissionEqual = Utility.equalsOrOneEmpty(permission, alias.permission);
         boolean enabledEqual = enabled == alias.enabled;
         boolean exportedEqual = exported == alias.exported;
         //  TODO check whether correct
