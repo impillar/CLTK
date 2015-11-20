@@ -93,11 +93,12 @@ public class ManifestActivity extends ManifestComponent {
         String maxRecentsString = e.attributeValue("android:maxRecents");
         if (maxRecentsString == null || maxRecentsString.equals("")) {
             maxRecents = 16;
-        }
-        maxRecents = Integer.parseInt(maxRecentsString);
-        if (maxRecents > 50 || maxRecents < 1) {
-            String msg = String.format("maxRecents=%d", maxRecents);
-            throw new InvalidManifestException(msg);
+        } else {
+            maxRecents = Integer.parseInt(maxRecentsString);
+            if (maxRecents > 50 || maxRecents < 1) {
+                String msg = String.format("maxRecents=%d", maxRecents);
+                throw new InvalidManifestException(msg);
+            }
         }
 
     }

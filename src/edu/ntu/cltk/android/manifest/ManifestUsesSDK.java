@@ -22,6 +22,10 @@ public class ManifestUsesSDK extends ManifestElement {
         }
     }
 
+    public ManifestUsesSDK() {
+        minSdkVersion = targetSdkVersion = maxSdkVersion = 1;
+    }
+
     public ManifestUsesSDK(Element e) {
         String minString = e.attributeValue("android:minSdkVersion");
         minSdkVersion = tryParseInt(minString, 1);

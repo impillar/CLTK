@@ -1,6 +1,7 @@
 package edu.ntu.cltk.android.manifest;
 
 import edu.ntu.cltk.data.ArrayUtil;
+import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -17,6 +18,8 @@ import java.util.List;
  * http://developer.android.com/guide/topics/manifest/manifest-element.html
  */
 public class ManifestDocument {
+
+    Logger logger = Logger.getLogger(ManifestDocument.class);
 
     private String filePath;
     private String packageName;
@@ -43,6 +46,14 @@ public class ManifestDocument {
             this.versionCode = root.attributeValue("android:versionCode");
             this.versionName = root.attributeValue("android:versionName");
 
+            Object sdkObj = root.element(ManifestUsesSDK.TAG);
+            if (sdkObj != null) {
+                Element sdkElement = (Element) sdkObj;
+                this.sdk = new ManifestUsesSDK(sdkElement);
+            } else {
+                this.sdk = new ManifestUsesSDK();
+            }
+
             for (Object obj : root.elements()) {
                 Element e = (Element) obj;
                 String name = e.getName();
@@ -58,8 +69,6 @@ public class ManifestDocument {
                 } else if (name.equals(ManifestUsesFeature.TAG)) {
                     ManifestUsesFeature muf = new ManifestUsesFeature(e);
                     this.usesFeatures.add(muf);
-                } else if (name.equals(ManifestUsesSDK.TAG)) {
-                    this.sdk = new ManifestUsesSDK(e);
                 }
             }
         } catch (DocumentException e) {

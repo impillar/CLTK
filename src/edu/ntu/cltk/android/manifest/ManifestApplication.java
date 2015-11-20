@@ -59,12 +59,17 @@ public class ManifestApplication extends ManifestElement {
         allowBackup = e.attributeValue("android:allowBackup", "true").equalsIgnoreCase("true");
         debuggable = e.attributeValue("android:debuggable", "false").equalsIgnoreCase("true");
         enabled = e.attributeValue("android:enabled", "true").equalsIgnoreCase("true");
-        hasCode = e.attributeValue("android:hasCode").equalsIgnoreCase("true");
-        //  FIXME: incorrect here since related to sdk version
-        hardwareAccelerated = e.attributeValue("android:hardwareAccelerated").equalsIgnoreCase("true");
+
+        hasCode = e.attributeValue("android:hasCode", "true").equalsIgnoreCase("true");
+        ManifestUsesSDK sdk = parent.getSDK();
+        if (sdk.minSdkVersion >= 14 || sdk.targetSdkVersion >= 14) {
+            hardwareAccelerated = e.attributeValue("android:hardwareAccelerated", "true").equalsIgnoreCase("true");
+        } else {
+            hardwareAccelerated = e.attributeValue("android:hardwareAccelerated", "false").equalsIgnoreCase("true");
+        }
         killAfterRestore = e.attributeValue("android:killAfterRestore", "true").equalsIgnoreCase("true");
-        //  FIXME; may be null
-        largeHeap = e.attributeValue("android:largeHeap").equalsIgnoreCase("true");
+        //  TODO: ensure correctness
+        largeHeap = e.attributeValue("android:largeHeap", "false").equalsIgnoreCase("true");
         persistent = e.attributeValue("android:persistent", "false").equalsIgnoreCase("true");
         restoreAnyVersion = e.attributeValue("android:restoreAnyVersion", "false").equalsIgnoreCase("true");
         //  TODO ensure correctness
@@ -86,7 +91,8 @@ public class ManifestApplication extends ManifestElement {
             Element activityAlias = (Element) activityAliasObject;
             ManifestActivityAlias maa = new ManifestActivityAlias(activityAlias);
             for (ManifestActivity mActivity : activities) {
-                if (mActivity.getName().equalsIgnoreCase(maa.getTargetActivity())) {
+                String activityName = mActivity.getName();
+                if (activityName.equalsIgnoreCase(maa.getTargetActivity())) {
                     mActivity.mergeActivityAlias(maa);
                 }
             }
@@ -100,7 +106,7 @@ public class ManifestApplication extends ManifestElement {
 
         for (Object providerObject : e.elements(ManifestProvider.TAG)) {
             Element provider = (Element) providerObject;
-            ManifestProvider mProvider = new ManifestProvider(provider);
+            ManifestProvider mProvider = new ManifestProvider(provider, parent);
             providers.add(mProvider);
         }
 

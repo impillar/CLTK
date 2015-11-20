@@ -64,11 +64,20 @@ public abstract class ManifestComponent extends ManifestElement {
         } else {
             exported = e.attributeValue("android:exported", "false").equalsIgnoreCase("true");
         }
-
         name = e.attributeValue("android:name");
+
         permission = e.attributeValue("android:permission");
         process = e.attributeValue("android:process");
 
+    }
+
+    public String toString() {
+        String s = "enabled=" + enabled + "\n"
+                + "exported=" + exported + "\n"
+                + "name=" + String.valueOf(name) + "\n"
+                + "permission=" + String.valueOf(permission) + "\n"
+                + "process=" + String.valueOf(process) + "\n";
+        return s;
     }
 
 }
