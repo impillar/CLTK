@@ -1,14 +1,16 @@
 package edu.ntu.cltk.android.manifest;
 
-import org.apache.log4j.Logger;
+
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ManifestActivity extends ManifestComponent {
 
-    private Logger logger = Logger.getLogger(ManifestActivity.class);
+    final static private Logger logger = LoggerFactory.getLogger(ManifestComponent.class);
 
     public final static String TAG = "activity";
 
@@ -51,15 +53,8 @@ public class ManifestActivity extends ManifestComponent {
         allowEmbedded = Utility.getAttributeValue(e, "android:allowEmbedded", "false").equalsIgnoreCase("true");
         allowTaskReparenting = Utility.getAttributeValue(e, "android:allowTaskReparenting", "false").equalsIgnoreCase("true");
         alwaysRetainTaskState = Utility.getAttributeValue(e, "android:alwaysRetainTaskState", "false").equalsIgnoreCase("true");
-        //  FIXME get default
-        String autoRemoveFromRecentsString = Utility.getAttributeValue(e, "android:autoRemoveFromRecents");
-        if (autoRemoveFromRecentsString == null) {
-            logger.warn("no autoRemoveFromRecents, default to false");
-            autoRemoveFromRecents = false;
-        } else {
-            autoRemoveFromRecents = autoRemoveFromRecentsString.equalsIgnoreCase("true");
-        }
-
+        //  TODO check correctness
+        autoRemoveFromRecents = Utility.getAttributeValue(e, "android:autoRemoveFromRecents", "false").equalsIgnoreCase("true");
         clearTaskOnLaunch = Utility.getAttributeValue(e, "android:clearTaskOnLaunch", "false").equalsIgnoreCase("true");
         enabled = Utility.getAttributeValue(e, "android:enabled", "true").equalsIgnoreCase("true");
         excludeFromRecents = Utility.getAttributeValue(e, "android:excludeFromRecents", "false").equalsIgnoreCase("true");

@@ -1,11 +1,12 @@
 package edu.ntu.cltk.android.manifest;
 
 import edu.ntu.cltk.data.ArrayUtil;
-import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,7 +20,8 @@ import java.util.List;
  */
 public class ManifestDocument {
 
-    Logger logger = Logger.getLogger(ManifestDocument.class);
+    static final Logger logger = LoggerFactory.getLogger(ManifestDocument.class);
+
 
     private String filePath;
     private String packageName;
@@ -42,9 +44,9 @@ public class ManifestDocument {
         try {
             Document document = reader.read(is);
             Element root = document.getRootElement();
-            this.packageName = root.attributeValue("android:package");
-            this.versionCode = root.attributeValue("android:versionCode");
-            this.versionName = root.attributeValue("android:versionName");
+            this.packageName = Utility.getAttributeValue(root, "package");
+            this.versionCode = Utility.getAttributeValue(root, "versionCode");
+            this.versionName = Utility.getAttributeValue(root, "versionName");
 
             Object sdkObj = root.element(ManifestUsesSDK.TAG);
             if (sdkObj != null) {

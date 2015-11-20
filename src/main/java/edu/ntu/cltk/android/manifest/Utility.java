@@ -2,6 +2,8 @@ package edu.ntu.cltk.android.manifest;
 
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.zip.ZipFile;
 
 @SuppressWarnings("unused")
 public class Utility {
+    final static Logger logger = LoggerFactory.getLogger(Utility.class);
     public static final String manifestFileName = "AndroidManifest.xml";
 
     public static String getSootName(String name) {
@@ -37,14 +40,17 @@ public class Utility {
         if (name.contains(":")) {
             String[] splited = name.split(":");
             assert splited.length == 2;
-            Attribute attribute = element.attribute(splited[1]);
+            String simpleName = splited[1];
+            Attribute attribute = element.attribute(simpleName);
             if (attribute == null) {
+                logger.warn("{} defaults to {}", name, defaultVal);
                 return defaultVal;
             }
             String elementQName = attribute.getQName().getQualifiedName();
             if (elementQName.equals(name)) {
                 return attribute.getValue();
             } else {
+                logger.error("{} exists, however {} does not", simpleName, name);
                 return defaultVal;
             }
         } else {
