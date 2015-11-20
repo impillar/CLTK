@@ -13,9 +13,9 @@ public class ManifestUsesFeature extends ManifestElement {
 
 
     public ManifestUsesFeature(Element element) {
-        name = element.attributeValue("name");
-        required = element.attributeValue("required");
-        required = element.attributeValue("glEsVersion");
+        name = element.attributeValue("android:name");
+        required = element.attributeValue("android:required");
+        required = element.attributeValue("android:glEsVersion");
     }
 
     public String getName() {

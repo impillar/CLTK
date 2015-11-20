@@ -37,7 +37,7 @@ public class ManifestIntentFilter extends ManifestElement {
         private String name;
 
         Action(Element e) {
-            name = e.attributeValue("name");
+            name = e.attributeValue("android:name");
         }
     }
 
@@ -45,7 +45,7 @@ public class ManifestIntentFilter extends ManifestElement {
         private String name;
 
         Category(Element e) {
-            name = e.attributeValue("category");
+            name = e.attributeValue("android:category");
         }
     }
 

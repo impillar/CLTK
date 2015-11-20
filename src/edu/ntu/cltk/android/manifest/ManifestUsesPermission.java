@@ -11,8 +11,8 @@ public class ManifestUsesPermission extends ManifestElement {
     private String name;
 
     public ManifestUsesPermission(Element element) {
-        name = element.attributeValue("name");
-        maxSdkVersion = element.attributeValue("maxSdkVersion");
+        name = element.attributeValue("android:name");
+        maxSdkVersion = element.attributeValue("android:maxSdkVersion");
     }
 
     /**

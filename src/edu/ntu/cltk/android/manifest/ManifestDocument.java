@@ -42,9 +42,9 @@ public class ManifestDocument {
         try {
             Document document = reader.read(is);
             Element root = document.getRootElement();
-            this.packageName = root.attributeValue("package");
-            this.versionCode = root.attributeValue("versionCode");
-            this.versionName = root.attributeValue("versionName");
+            this.packageName = root.attributeValue("android:package");
+            this.versionCode = root.attributeValue("android:versionCode");
+            this.versionName = root.attributeValue("android:versionName");
 
             Object sdkObj = root.element(ManifestUsesSDK.TAG);
             if (sdkObj != null) {

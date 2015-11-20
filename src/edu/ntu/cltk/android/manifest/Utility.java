@@ -1,5 +1,8 @@
 package edu.ntu.cltk.android.manifest;
 
+import org.dom4j.Attribute;
+import org.dom4j.Element;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +24,24 @@ public class Utility {
         }
         return name;
     }
-    
+
+    public static String getAttributeValue(Element e, String name) {
+        if (name.contains(":")) {
+            String[] splited = name.split(":");
+            assert splited.length == 2;
+            Attribute attribute = e.attribute(splited[1]);
+            String elementQName = attribute.getQName().getQualifiedName();
+            if (elementQName.equals(name)) {
+                return attribute.getValue();
+            } else {
+                return null;
+            }
+        } else {
+            return e.attributeValue(name);
+        }
+
+    }
+
     public static InputStream getInputStreamFromApk(String apkFile) {
 
         File apkF = new File(apkFile);
@@ -57,5 +77,16 @@ public class Utility {
         }
 
         return manifestIS;
+    }
+
+    static int tryParseInt(String str, int defaultVal) {
+        if (str == null) {
+            return defaultVal;
+        }
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            throw new InvalidManifestException(e.getMessage());
+        }
     }
 }

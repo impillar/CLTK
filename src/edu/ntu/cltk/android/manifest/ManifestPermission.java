@@ -12,9 +12,9 @@ public class ManifestPermission extends ManifestElement {
     private String protectionLevel;
 
     public ManifestPermission(Element element) {
-        this.name = element.attributeValue("name");
-        this.permissionGroup = element.attributeValue("permissionGroup");
-        this.protectionLevel = element.attributeValue("protectionLevel");
+        this.name = element.attributeValue("android:name");
+        this.permissionGroup = element.attributeValue("android:permissionGroup");
+        this.protectionLevel = element.attributeValue("android:protectionLevel");
     }
 
     public String getName() {
