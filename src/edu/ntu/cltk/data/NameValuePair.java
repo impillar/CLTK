@@ -125,4 +125,10 @@ public class NameValuePair<K, V> {
 		if (value == null || val == null)	return false;
 		return value.toString().equalsIgnoreCase(val);
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		NameValuePair<K, V> nvp = (NameValuePair<K, V>)obj;
+		return getKey().equals(nvp.getKey()) && getValue().equals(nvp.getValue());
+	}
 }

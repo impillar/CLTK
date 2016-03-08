@@ -1,6 +1,5 @@
 package edu.ntu.cltk.android.manifest;
 
-import edu.ntu.cltk.android.manifest.ManifestActivity;
 
 public class ManifestActivityAlias extends ManifestActivity {
 
@@ -16,6 +15,11 @@ public class ManifestActivityAlias extends ManifestActivity {
 	@Override
 	public String toString(){
 		return name;
+	}
+	
+	@Override
+	public String toXml(){
+		return String.format("<%s android:name=\"%s\"></%s>", ManifestActivityAlias.TAG, name, ManifestActivityAlias.TAG);
 	}
 
 }

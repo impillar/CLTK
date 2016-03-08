@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.ntu.cltk.android.manifest.ManifestElement;
 import edu.ntu.cltk.android.manifest.ManifestIntentFilter;
+import edu.ntu.cltk.data.ArrayUtil;
 
 public class ManifestService extends ManifestElement {
 
@@ -30,6 +31,10 @@ public class ManifestService extends ManifestElement {
 		this.intentFilters.add(intentFilter);
 	}
 	
+	public void addAllIntentFilters(List<ManifestIntentFilter> intentFilters){
+		this.intentFilters.addAll(intentFilters);
+	}
+	
 	@Override
 	public String toString(){
 		return this.name;
@@ -37,7 +42,7 @@ public class ManifestService extends ManifestElement {
 	
 	public boolean containsAction(String action){
 		for (ManifestIntentFilter filter : intentFilters){
-			if (filter.getAction().equalsIgnoreCase(action)){
+			if (filter.getAllActions().contains(action)){
 				return true;
 			}
 		}
@@ -47,8 +52,12 @@ public class ManifestService extends ManifestElement {
 	public List<String> getAllActions(){
 		List<String> actions = new ArrayList<String>();
 		for (ManifestIntentFilter filter : intentFilters){
-			actions.add(filter.getAction());
+			actions.addAll(filter.getAllActions());
 		}
 		return actions;
+	}
+	@Override
+	public String toXml() {
+		return String.format("<%s android:name=\"%s\">%s</%s>", ManifestService.TAG, this.name, ArrayUtil.serializeArray(intentFilters, ""), ManifestService.TAG);
 	}
 }

@@ -1,9 +1,5 @@
 package edu.ntu.cltk.android.manifest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.ntu.cltk.android.manifest.ManifestElement;
 
 public class ManifestUsesPermission extends ManifestElement {
 
@@ -20,5 +16,15 @@ public class ManifestUsesPermission extends ManifestElement {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String toString(){
+		return this.permission;
+	}
+
+	@Override
+	public String toXml() {
+		return String.format("<%s android:name=\"%s\" />", ManifestUsesPermission.TAG, name);
 	}
 }

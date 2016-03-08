@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.ntu.cltk.android.manifest.ManifestElement;
 import edu.ntu.cltk.android.manifest.ManifestIntentFilter;
+import edu.ntu.cltk.data.ArrayUtil;
 /**
  * 
  * @author pillar
@@ -35,6 +36,10 @@ public class ManifestActivity extends ManifestElement {
 		this.intentFilters.add(intentFilter);
 	}
 	
+	public void addAllIntentFilters(List<ManifestIntentFilter> intentFilters){
+		this.intentFilters.addAll(intentFilters);
+	}
+	
 	public List<ManifestIntentFilter> getIntentFilters(){
 		return this.intentFilters;
 	}
@@ -46,7 +51,7 @@ public class ManifestActivity extends ManifestElement {
 	
 	public boolean containsAction(String action){
 		for (ManifestIntentFilter filter : intentFilters){
-			if (filter.getAction().equalsIgnoreCase(action)){
+			if (filter.getAllActions().contains(action)){
 				return true;
 			}
 		}
@@ -56,9 +61,14 @@ public class ManifestActivity extends ManifestElement {
 	public List<String> getAllActions(){
 		List<String> actions = new ArrayList<String>();
 		for (ManifestIntentFilter filter : intentFilters){
-			actions.add(filter.getAction());
+			actions.addAll(filter.getAllActions());
 		}
 		return actions;
+	}
+
+	@Override
+	public String toXml() {
+		return String.format("<%s android:name=\"%s\">%s</%s>", ManifestActivity.TAG, this.name, ArrayUtil.serializeArray(intentFilters, ""), ManifestActivity.TAG);
 	}
 
 }

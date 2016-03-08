@@ -112,6 +112,7 @@ public class ManifestApplication extends ManifestElement{
 	public void addLibrary(ManifestLibrary library) {
 		this.libraries.add(library);
 	}
+	
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -119,9 +120,28 @@ public class ManifestApplication extends ManifestElement{
 		sb.append("activities: " + ArrayUtil.serializeArray(activities, ", ") + "\n");
 		sb.append("activities-alias: " + ArrayUtil.serializeArray(alias, ", ") + "\n");
 		sb.append("service: " + ArrayUtil.serializeArray(services, ", ") + "\n");
-		sb.append("receivers: " + ArrayUtil.serializeArray(services, ", ") + "\n");
+		sb.append("receivers: " + ArrayUtil.serializeArray(receivers, ", ") + "\n");
 		sb.append("providers: " + ArrayUtil.serializeArray(providers, ", ") + "\n");
 		sb.append("libraries: " + ArrayUtil.serializeArray(libraries, ", ") + "\n");
+		return sb.toString();
+	}
+	@Override
+	public String toXml() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<"+ManifestApplication.TAG+(name==null?"":" android:name=\""+name+"\"")+">");
+		if (activities.size() > 0)
+			sb.append(ArrayUtil.serializeArray(activities, ""));
+		if (services.size() > 0)
+			sb.append(ArrayUtil.serializeArray(services, ""));
+		if (alias.size() > 0)
+			sb.append(ArrayUtil.serializeArray(alias, ""));
+		if (receivers.size() > 0)
+			sb.append(ArrayUtil.serializeArray(receivers, ""));
+		if (providers.size() > 0)
+			sb.append(ArrayUtil.serializeArray(providers, ""));
+		if (libraries.size() > 0)
+			sb.append(ArrayUtil.serializeArray(libraries, ""));
+		sb.append("</"+ManifestApplication.TAG+">");
 		return sb.toString();
 	}
 }

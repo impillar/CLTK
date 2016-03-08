@@ -5,13 +5,29 @@ import java.util.List;
 
 import edu.ntu.cltk.android.manifest.ManifestElement;
 import edu.ntu.cltk.android.manifest.ManifestIntentFilter;
+import edu.ntu.cltk.data.ArrayUtil;
 
 public class ManifestReceiver extends ManifestElement {
 
 	public final static String TAG = "receiver";
 	
-	private String name = "receiver";
+	private String name;
+	private boolean exported;
+	private boolean enabled;
 	protected List<ManifestIntentFilter> intentFilters = new ArrayList<ManifestIntentFilter>();
+	
+	public ManifestReceiver(String name, boolean exported, boolean enabled){
+		this.name = name;
+		this.exported = exported;
+		this.enabled = enabled;
+	}
+	
+	public ManifestReceiver(String name, boolean exported, boolean enabled, List<ManifestIntentFilter> intentFilters){
+		this.name = name;
+		this.exported = exported;
+		this.enabled = enabled;
+		this.intentFilters = intentFilters;
+	}
 	
 	@Override
 	public String getName() {
@@ -29,6 +45,10 @@ public class ManifestReceiver extends ManifestElement {
 	public void addIntentFilter(ManifestIntentFilter intentFilter){
 		this.intentFilters.add(intentFilter);
 	}
+	
+	public void addAllIntentFilters(List<ManifestIntentFilter> intentFilters){
+		this.intentFilters.addAll(intentFilters);
+	}
 
 	@Override
 	public String toString(){
@@ -37,7 +57,7 @@ public class ManifestReceiver extends ManifestElement {
 
 	public boolean containsAction(String action){
 		for (ManifestIntentFilter filter : intentFilters){
-			if (filter.getAction().equalsIgnoreCase(action)){
+			if (filter.getAllActions().contains(action)){
 				return true;
 			}
 		}
@@ -47,8 +67,18 @@ public class ManifestReceiver extends ManifestElement {
 	public List<String> getAllActions(){
 		List<String> actions = new ArrayList<String>();
 		for (ManifestIntentFilter filter : intentFilters){
-			actions.add(filter.getAction());
+			actions.addAll(filter.getAllActions());
 		}
 		return actions;
+	}
+	@Override
+	public String toXml() {
+		return String.format("<%s android:name=\"%s\" android:enabled=\"%b\" android:exported=\"%b\">%s</%s>", 
+				ManifestReceiver.TAG,
+				name,
+				enabled,
+				exported,
+				ArrayUtil.serializeArray(intentFilters, ""),
+				ManifestReceiver.TAG);
 	}
 }

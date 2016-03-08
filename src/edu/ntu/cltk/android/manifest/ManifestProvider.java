@@ -52,8 +52,17 @@ public class ManifestProvider extends ManifestElement {
 		this.intentFilters.add(intentFilter);
 	}
 	
+	public void addAllIntentFilter(List<ManifestIntentFilter> intentFilters){
+		this.intentFilters.addAll(intentFilters);
+	}
+	
 	@Override
 	public String toString(){
 		return this.name;
+	}
+
+	@Override
+	public String toXml() {
+		return null;
 	}
 }

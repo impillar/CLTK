@@ -18,4 +18,9 @@ public class ManifestUsesFeature extends ManifestElement{
 		return this.name;
 	}
 
+	@Override
+	public String toXml() {
+		return String.format("<%s android:name=\"%s\" />", ManifestUsesFeature.TAG, name);
+	}
+
 }

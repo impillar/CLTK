@@ -1,11 +1,16 @@
 package edu.ntu.cltk.crypto;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.InflaterInputStream;
 
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
@@ -120,5 +125,24 @@ public class CryptoUtil {
 		}
 		mat.appendTail(sb);
 		return sb.toString();
+	}
+	
+	public static String deflate(String str){
+		
+		InflaterInputStream is = new InflaterInputStream(new ByteArrayInputStream(str.getBytes()));
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
+		byte[] buf = new byte[4096];
+		int len = 0;
+		try {
+			while ((len = is.read(buf)) != -1){
+				baos.write(buf, 0, len);
+			}
+			
+			return new String(baos.toByteArray(), "UTF-8");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

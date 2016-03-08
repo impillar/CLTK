@@ -19,4 +19,9 @@ public class ManifestLibrary extends ManifestElement {
 	public String toString(){
 		return this.name;
 	}
+
+	@Override
+	public String toXml() {
+		return String.format("<%s android:name=\"%s\" />", ManifestLibrary.TAG, name);
+	}
 }

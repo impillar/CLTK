@@ -11,4 +11,9 @@ public class ManifestInstrumentation extends ManifestElement{
 	public String getName() {
 		return name;
 	}
+	@Override
+	public String toXml() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
